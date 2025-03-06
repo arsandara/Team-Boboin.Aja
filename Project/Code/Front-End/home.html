@@ -14,6 +14,27 @@
      body {
               font-family: 'Poppins', sans-serif;
           }
+    .scrollbar-hide::-webkit-scrollbar {
+              display: none;
+          }
+    .scrollbar-hide {
+              -ms-overflow-style: none;
+              scrollbar-width: none;
+          }
+    .overlay {
+              position: absolute;
+              bottom: 10px;
+              left: 0;
+              width: 100%;
+              text-align: center;
+              color: white;
+              font-weight: bold;
+              background: rgba(0, 0, 0, 0.4);
+              padding: 10px 0;
+          }
+    .relative-container {
+              position: relative;
+          }
     </style>
 </head>
    <body class="bg-gray-100">
@@ -96,174 +117,183 @@
     
     <!-- Explore Amazing Rooms -->
     <section class="container mx-auto py-12 px-6">
-     <h2 class="text-2xl font-bold mb-6">
-      Explore Amazing Rooms
-     </h2>
-     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-       <img alt="Deluxe Cabin" class="w-full h-48 object-cover" height="300" src="Deluxe Cabin.jpeg" width="400">
-       <div class="p-4">
-        <h3 class="text-lg font-semibold">
-         Deluxe Cabin
-        </h3>
-        <div class="flex items-center text-sm text-gray-500 m-2">
-         <i class="fas fa-star text-yellow-500 mr-1">
-         </i>
-         4.9
-         <i class="fas fa-user-friends ml-4 mr-1">
-         </i>
-         2 peoples
+        <h2 class="text-2xl font-bold mb-6">
+         Explore Amazing Rooms
+        </h2>
+        <div class="flex space-x-6 overflow-x-auto scrollbar-hide whitespace-nowrap">
+         <div class="bg-white rounded-lg shadow-lg overflow-hidden w-80 flex-shrink-0 inline-block">
+          <img alt="Deluxe Cabin" class="w-full h-48 object-cover" src="Deluxe Cabin.jpeg">
+          <div class="p-4">
+           <h3 class="text-lg font-semibold">
+            Deluxe Cabin
+
+           </h3>
+           <div class="flex items-center text-sm text-gray-500 m-2">
+            <i class="fas fa-star text-yellow-500 mr-1"></i>
+            4.9
+            <i class="fas fa-user-friends ml-4 mr-1"></i>
+            2 peoples
+           </div>
+           <p class="mt-2 text-lg font-bold">Rp. 100.000.000</p>
+          </div>
+         </div>
+         <div class="bg-white rounded-lg shadow-lg overflow-hidden w-80 flex-shrink-0 inline-block">
+          <img alt="Executive Cabin" class="w-full h-48 object-cover" src="Executive Cabin.png">
+          <div class="p-4">
+           <h3 class="text-lg font-semibold">
+            Executive Cabin
+
+           </h3>
+           <div class="flex items-center text-sm text-gray-500 mt-2">
+            <i class="fas fa-star text-yellow-500 mr-1"></i>
+            4.9
+            <i class="fas fa-user-friends ml-4 mr-1"></i>
+            2 peoples
+           </div>
+           <p class="mt-2 text-lg font-bold">Rp. 100.000.000</p>
+          </div>
+         </div>
+         <div class="bg-white rounded-lg shadow-lg overflow-hidden w-80 flex-shrink-0 inline-block">
+          <img alt="Executive Cabin with Jacuzzi" class="w-full h-48 object-cover" src="Executive Cabin with Jacuzzi.png">
+          <div class="p-4">
+           <h3 class="text-lg font-semibold">
+            Executive Cabin with Jacuzzi
+
+           </h3>
+           <div class="flex items-center text-sm text-gray-500 mt-2">
+            <i class="fas fa-star text-yellow-500 mr-1"></i>
+            4.9
+            <i class="fas fa-user-friends ml-4 mr-1"></i>
+            2 peoples
+           </div>
+           <p class="mt-2 text-lg font-bold">Rp. 100.000.000</p>
+          </div>
+         </div>
+         <div class="bg-white rounded-lg shadow-lg overflow-hidden w-80 flex-shrink-0 inline-block">
+            <img alt="Executive Cabin with Jacuzzi" class="w-full h-48 object-cover" src="Family Cabin.png">
+            <div class="p-4">
+             <h3 class="text-lg font-semibold">
+              Family Cabin
+
+             </h3>
+             <div class="flex items-center text-sm text-gray-500 mt-2">
+              <i class="fas fa-star text-yellow-500 mr-1"></i>
+              4.9
+              <i class="fas fa-user-friends ml-4 mr-1"></i>
+              4 peoples
+             </div>
+             <p class="mt-2 text-lg font-bold">Rp. 100.000.000</p>
+            </div>
+           </div>
+           <div class="bg-white rounded-lg shadow-lg overflow-hidden w-80 flex-shrink-0 inline-block">
+            <img alt="Family Cabin with Jacuzzi" class="w-full h-48 object-cover" src="Family Cabin with Jacuzzi.png">
+            <div class="p-4">
+             <h3 class="text-lg font-semibold">
+              Family Cabin with Jacuzzi
+
+             </h3>
+             <div class="flex items-center text-sm text-gray-500 mt-2">
+              <i class="fas fa-star text-yellow-500 mr-1"></i>
+              4.9
+              <i class="fas fa-user-friends ml-4 mr-1"></i>
+              4 peoples
+             </div>
+             <p class="mt-2 text-lg font-bold">Rp. 100.000.000</p>
+            </div>
+           </div>
+           <div class="bg-white rounded-lg shadow-lg overflow-hidden w-80 flex-shrink-0 inline-block">
+            <img alt="Executive Cabin with Jacuzzi" class="w-full h-48 object-cover" src="2 Paws Cabin.png">
+            <div class="p-4">
+             <h3 class="text-lg font-semibold">
+              2 Paws Cabin
+
+             </h3>
+             <div class="flex items-center text-sm text-gray-500 mt-2">
+              <i class="fas fa-star text-yellow-500 mr-1"></i>
+              4.9
+              <i class="fas fa-user-friends ml-4 mr-1"></i>
+              2 peoples
+             </div>
+             <p class="mt-2 text-lg font-bold">Rp. 100.000.000</p>
+            </div>
+           </div>
+           <div class="bg-white rounded-lg shadow-lg overflow-hidden w-80 flex-shrink-0 inline-block">
+            <img alt="Executive Cabin with Jacuzzi" class="w-full h-48 object-cover" src="4 Paws Cabin.png">
+            <div class="p-4">
+             <h3 class="text-lg font-semibold">
+              4 Paws Cabin
+
+             </h3>
+             <div class="flex items-center text-sm text-gray-500 mt-2">
+              <i class="fas fa-star text-yellow-500 mr-1"></i>
+              4.9
+              <i class="fas fa-user-friends ml-4 mr-1"></i>
+              4 peoples
+             </div>
+             <p class="mt-2 text-lg font-bold">Rp. 100.000.000</p>
+            </div>
+           </div>
+           <div class="bg-white rounded-lg shadow-lg overflow-hidden w-80 flex-shrink-0 inline-block">
+            <img alt="Executive Cabin with Jacuzzi" class="w-full h-48 object-cover" src="Romantic Cabin.png">
+            <div class="p-4">
+             <h3 class="text-lg font-semibold">
+              Romantic Cabin
+
+             </h3>
+             <div class="flex items-center text-sm text-gray-500 mt-2">
+              <i class="fas fa-star text-yellow-500 mr-1"></i>
+              4.9
+              <i class="fas fa-user-friends ml-4 mr-1"></i>
+              2 peoples
+             </div>
+             <p class="mt-2 text-lg font-bold">Rp. 100.000.000</p>
+            </div>
+           </div>
+           <div class="bg-white rounded-lg shadow-lg overflow-hidden w-80 flex-shrink-0 inline-block">
+            <img alt="Executive Cabin with Jacuzzi" class="w-full h-48 object-cover" src="Romantic Cabin with Jacuzzi.png">
+            <div class="p-4">
+             <h3 class="text-lg font-semibold">
+              Romantic Cabin with Jacuzzi
+
+             </h3>
+             <div class="flex items-center text-sm text-gray-500 mt-2">
+              <i class="fas fa-star text-yellow-500 mr-1"></i>
+              4.9
+              <i class="fas fa-user-friends ml-4 mr-1"></i>
+              2 peoples
+             </div>
+             <p class="mt-2 text-lg font-bold">Rp. 100.000.000</p>
+            </div>
         </div>
-        <p class="mt-2 text-lg font-bold">
-         Rp. 100.000.000
-        </p>
-       </div>
-      </div>
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-       <img alt="Executive Cabin" class="w-full h-48 object-cover" height="300" src="Executive Cabin.png" width="400">
-       <div class="p-4">
-        <h3 class="text-lg font-semibold">
-         Executive Cabin
-        </h3>
-        <div class="flex items-center text-sm text-gray-500 mt-2">
-         <i class="fas fa-star text-yellow-500 mr-1">
-         </i>
-         4.9
-         <i class="fas fa-user-friends ml-4 mr-1">
-         </i>
-         2 peoples
-        </div>
-        <p class="mt-2 text-lg font-bold">
-         Rp. 100.000.000
-        </p>
-       </div>
-      </div>
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-       <img alt="Executive Cabin with Jacuzzi" class="w-full h-48 object-cover" height="300" src="Executive Cabin with Jacuzzi.png" width="400">
-       <div class="p-4">
-        <h3 class="text-lg font-semibold">
-         Executive Cabin with Jacuzzi
-        </h3>
-        <div class="flex items-center text-sm text-gray-500 mt-2">
-         <i class="fas fa-star text-yellow-500 mr-1">
-         </i>
-         4.9
-         <i class="fas fa-user-friends ml-4 mr-1">
-         </i>
-         2 peoples
-        </div>
-        <p class="mt-2 text-lg font-bold">
-         Rp. 100.000.000
-        </p>
-       </div>
-      </div>
-     </div>
-    </section>
+       </section>
     
     <!-- Services & Facilities -->
     <section class="container mx-auto py-12 px-6">
-     <h2 class="text-2xl font-bold mb-6">
-      Services &amp; Facilities
-     </h2>
-     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-       <img alt="Cozy Rooms" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/AFVIzoMqM5bnR6c1mEhDjI15L__qx5gLprVXib6th9A.jpg" width="400">
-       <div class="p-4">
-        <h3 class="text-lg font-semibold">
-         Cozy Rooms
-        </h3>
-       </div>
-      </div>
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-       <img alt="Private Jacuzzi" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/oFkcRI-uYRDeCvFnga7oMpo_tH63Wo5ukx7UcbqvNjk.jpg" width="400">
-       <div class="p-4">
-        <h3 class="text-lg font-semibold">
-         Private Jacuzzi
-        </h3>
-       </div>
-      </div>
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-       <img alt="Dog Park" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/kad-e9MLHb7YFOAHcA8xvroGUkihU16jTjWzztulWBw.jpg" width="400">
-       <div class="p-4">
-        <h3 class="text-lg font-semibold">
-         Dog Park
-        </h3>
-       </div>
-      </div>
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-       <img alt="Outdoor Lounge" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/r3XrNZHxDHoE7yA3LDjAHWI_tfMnIv_ewmdJU0PsO7U.jpg" width="400">
-       <div class="p-4">
-        <h3 class="text-lg font-semibold">
-         Outdoor Lounge
-        </h3>
-       </div>
-      </div>
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-       <img alt="Dining &amp; Bar" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/JImKytTMF8fQWukhYjyVqJxGxvDcynNGyz8NH6O0pMA.jpg" width="400">
-       <div class="p-4">
-        <h3 class="text-lg font-semibold">
-         Dining &amp; Bar
-        </h3>
-       </div>
-      </div>
-     </div>
-    </section>
-    
-    <!-- Contact Our Friendly Team -->
-    <section class="container mx-auto py-12 px-6">
-     <h2 class="text-2xl font-bold mb-6">
-      Contact Our Friendly Team
-     </h2>
-     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="bg-white rounded-lg shadow-lg p-6 flex items-center">
-       <i class="fab fa-whatsapp text-4xl text-green-500 mr-4">
-       </i>
-       <div>
-        <h3 class="text-lg font-semibold">
-         Chat to Admin
-        </h3>
-        <p class="text-gray-500">
-         Speak to our friendly team.
-        </p>
-        <a class="text-green-500" href="https://wa.me/082362848376">
-         wa.me/082362848376
-        </a>
-       </div>
-      </div>
-      <div class="bg-white rounded-lg shadow-lg p-6">
-       <h3 class="text-lg font-semibold mb-4">
-        Social Media
-       </h3>
-       <div class="flex space-x-4">
-        <a class="text-gray-500 hover:text-gray-700" href="#">
-         <i class="fab fa-instagram text-3xl">
-         </i>
-        </a>
-        <a class="text-gray-500 hover:text-gray-700" href="#">
-         <i class="fab fa-x-twitter text-3xl">
-         </i>
-        </a>
-        <a class="text-gray-500 hover:text-gray-700" href="#">
-         <i class="fab fa-tiktok text-3xl">
-         </i>
-        </a>
-       </div>
-      </div>
-      <div class="bg-white rounded-lg shadow-lg p-6">
-       <h3 class="text-lg font-semibold mb-4">
-        Find Boboin.Aja
-       </h3>
-       <p class="text-gray-500">
-        Address:
-       </p>
-       <p class="text-gray-700">
-        Jl. Pancuran 7, Hamlet III Berubahan, Kemutug Lor, Baturaden District, Banyumas Regency, Central Java, Baturaden, Purwokerto, Indonesia, 53151
-       </p>
-      </div>
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-       <img alt="Map showing location of Boboin.Aja" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/ihLRCqcg17J--AJq0Va2xvy0idBjmZEyLUakbpnu43w.jpg" width="400">
-      </div>
-     </div>
+        <h2 class="text-2xl font-bold mb-6">
+         Services & Facilities
+        </h2>
+        <div class="grid grid-cols-3 gap-4">
+         <div class="relative-container row-span-2">
+          <img alt="Cozy Rooms" class="w-full h-full object-cover" src="Cozy Rooms.png">
+          <div class="overlay">Cozy Rooms</div>
+         </div>
+         <div class="relative-container">
+          <img alt="Private Jacuzzi" class="w-full h-full object-cover" src="Private Jacuzzi.png">
+          <div class="overlay">Private Jacuzzi</div>
+         </div>
+         <div class="relative-container">
+          <img alt="Dog Park" class="w-full h-full object-cover" src="Dog Park.png">
+          <div class="overlay">Dog Park</div>
+         </div>
+         <div class="relative-container">
+          <img alt="Outdoor Lounge" class="w-full h-full object-cover" src="Outdoor Louge.png">
+          <div class="overlay">Outdoor Lounge</div>
+         </div>
+         <div class="relative-container">
+          <img alt="Dining & Bar" class="w-full h-full object-cover" src="Dining and Bar.png">
+          <div class="overlay">Dining & Bar</div>
+         </div>
+        </div>
     </section>
 
     <!-- Footer -->
@@ -298,4 +328,3 @@
     </footer>
 </body>
 </html>
-   
