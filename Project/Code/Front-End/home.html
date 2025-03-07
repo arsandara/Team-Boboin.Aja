@@ -84,9 +84,21 @@
          </option>
         </select>
        </div>
-       <button class="bg-teal-900 text-white px-4 py-2 rounded-md">
-        Available Room
-       </button>
+       <!-- <button class="bg-teal-900 text-white px-4 py-2 rounded-md">
+        Available Room 
+       </button> -->
+ <!-- PHP -->
+       <button class="bg-teal-900 text-white px-4 py-2 rounded-md" onclick="showPopup()">Available Room</button>
+
+    <script>
+        function showPopup() {
+            var name = ("Baraoatuz Zukhruf Al Jatsiyah");
+            var nim = ("2311103021");
+            if (name && nim) {
+                alert("Name: " + name + "\nNIM: " + nim);
+            }
+        }
+    </script>
       </div>
      </div>
     </section>
@@ -316,7 +328,7 @@
         </div>
     </section>
     
- <!--  -->
+ <!-- Footer  -->
     <footer class="bg-teal-900 text-white py-12">
      <div class="container mx-auto px-6">
       <div class="flex flex-col md:flex-row justify-between items-center">
@@ -336,7 +348,9 @@
         </p>
         <p class="text-gray-300 mt-4">
          Surrounded by nature and designed for relaxation, our hotel is the perfect place to unwind, recharge, and embrace the beauty of the outdoors.
-        </p>
+        </p><br>
+
+    </script>
        </div>
       </div>
       <div class="text-center mt-6">
