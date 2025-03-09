@@ -34,7 +34,19 @@
        <a class="hover:text-gray-300" href="#">
         Contact
        </a>
+       <button class="hover:text-gray-300" href="#" onclick="showAboutPopup()">About</button>
+
+       <script>
+        function showAboutPopup() {
+            var name = ("Nadya Fakhirah");
+            var nim = ("2311103066");
+            if (name && nim) {
+                alert("Name: " + name + "\nNIM: " + nim);
+            }
+        }
+       </script>
       </nav>
+
       <!-- PHP TIARASYIFA ARSANDA -->
     <button class="bg-teal-900 text-white px-4 py-2 rounded-md" onclick="showLoginPopup()">Login/Sign Up</button>
 
