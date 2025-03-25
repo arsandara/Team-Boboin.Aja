@@ -4,122 +4,116 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Boboin.Aja</title>
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
-    </style>
+
 </head>
 <body class="bg-gray-100">
-    <!-- Header -->
-    <header class="bg-teal-900 text-white">
-        <div class="container mx-auto flex justify-between items-center py-4 px-6">
-            <div class="flex items-center">
-                <img alt="Boboin.Aja logo" class="h-10 mr-3" height="50" src="Logo.png" width="100">
-            </div>
-            <nav class="space-x-6">
-                <a class="hover:text-gray-300" href="home.html">Home</a>
-                <a class="hover:text-gray-300" href="rooms.html">Rooms</a>
-                <a class="hover:text-gray-300" href="facilities.html">Facilities</a>
-                <a class="hover:text-gray-300" href="contact.html">Contact</a>
-            </nav>
-            <button id="openPopup" class="text-white hover:underline">Login/Sign Up</button>
-        </div>
-    </header>
-
-    <!-- Pop-up Login -->
-    <!-- Popup Container - Increased width -->
-    <div id="popupContainer" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-      <div class="bg-white rounded-lg shadow-xl w-[500px] p-8 relative"> <!-- Changed w-96 to w-[500px] and increased padding -->
-          <button id="closePopup" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl">&times;</button>
-          
-          <div class="flex flex-col items-center mb-6">
-              <img src="Logogreen.png" alt="Boboin.aja logo" class="w-40 h-auto mb-4"> <!-- Adjusted logo size and used actual logo -->
-              <p class="text-center text-gray-600 text-sm">
-                  Find your perfect stay, where modern comfort meets serene tranquility.
-              </p>
-          </div>
-
-          <div class="flex justify-center mb-4 border-b">
-              <button class="tab-button active px-4 py-2 border-b-2 border-teal-900 text-teal-900" onclick="showTab('signin')">Log In</button>
-              <button class="tab-button px-4 py-2" onclick="showTab('signup')">Sign Up</button>
-          </div>
-
-            <div id="signin" class="tab-content active">
-                <input type="text" placeholder="Email or username" class="w-full p-2 border rounded mb-3">
-                <input type="password" placeholder="Password" class="w-full p-2 border rounded mb-3">
-                <button class="w-full bg-teal-900 text-white py-2 rounded hover:bg-teal-800">Log In</button>
-                
-                <p class="text-center mt-4 text-sm">
-                    Don't have an account? 
-                    <a href="#" onclick="showTab('signup')" class="text-green-500 hover:underline">Sign Up</a>
-                </p>
-            </div>
-
-            <div id="signup" class="tab-content hidden">
-                <input type="text" placeholder="Full Name" class="w-full p-2 border rounded mb-3">
-                <input type="email" placeholder="Email" class="w-full p-2 border rounded mb-3">
-                <input type="password" placeholder="Password" class="w-full p-2 border rounded mb-3">
-                <button class="w-full bg-teal-900 text-white py-2 rounded hover:bg-teal-800">Sign Up</button>
-                
-                <p class="text-center mt-4 text-sm">
-                    Already have an account? 
-                    <a href="#" onclick="showTab('signin')" class="text-green-500 hover:underline">Log In</a>
-                </p>
-            </div>
-        </div>
+  <header class="bg-teal-900 text-white">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+      <div class="flex items-center">
+        <img alt="Boboin.Aja logo" class="h-10 mr-3" height="50" src="Logo.png" width="100">
+        </span>
+      </div>
+      <nav class="space-x-6">
+        <a class="hover:text-gray-300" href="home.html">
+          Home
+        </a>
+        <a class="hover:text-gray-300" href="rooms.html">
+          Rooms
+        </a>
+        <a class="hover:text-gray-300" href="facilities.html">
+          Facilities
+        </a>
+        <a class="hover:text-gray-300" href="#">
+          Contact
+          <script>
+          </script>
+      </nav>
+      <!-- Button -->
+      <button id="openPopup" class="bg-white text-teal-900 px-4 py-2 rounded hover:bg-gray-200">Login / Sign Up</button>
     </div>
+  </header>
+  <!-- Pop-up -->
+  <div id="popupContainer" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+    <div class="popup-content">
+      <button id="closePopup" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl">&times;</button>
+      <div class="flex flex-col items-center mb-6">
+        <img src="Logogreen.png" alt="Boboin.Aja logo" class="w-40 h-auto mb-4">
+        <p class="text-center text-gray-600 text-sm">
+          Find your perfect stay, where modern comfort meets serene tranquility.
+        </p>
+      </div>
+      <div class="flex justify-center mb-4 border-b">
+        <button class="tab-button active px-4 py-2" onclick="showTab('signin')">Log In</button>
+        <button class="tab-button px-4 py-2" onclick="showTab('signup')">Sign Up</button>
+      </div>
+      <div id="signin" class="tab-content active">
+        <input type="text" placeholder="Email or username" class="w-full p-2 border rounded mb-3">
+        <input type="password" placeholder="Password" class="w-full p-2 border rounded mb-3">
+        <button class="w-full bg-teal-900 text-white py-2 rounded hover:bg-teal-800">Log In</button>
+        <p class="text-center mt-4 text-sm">
+          Don't have an account? <a href="#" onclick="showTab('signup')" class="text-green-500 hover:underline">Sign
+            Up</a>
+        </p>
+      </div>
+      <div id="signup" class="tab-content hidden">
+        <input type="text" placeholder="Full Name" class="w-full p-2 border rounded mb-3">
+        <input type="email" placeholder="Email" class="w-full p-2 border rounded mb-3">
+        <input type="password" placeholder="Password" class="w-full p-2 border rounded mb-3">
+        <button class="w-full bg-teal-900 text-white py-2 rounded hover:bg-teal-800">Sign Up</button>
+        <p class="text-center mt-4 text-sm">
+          Already have an account? <a href="#" onclick="showTab('signin')" class="text-green-500 hover:underline">Log
+            In</a>
+        </p>
+      </div>
+    </div>
+  </div>
 
-    <script>
-        function openPopup(tab = "signin") {
-            const popupContainer = document.getElementById("popupContainer");
-            popupContainer.classList.remove("hidden");
-            popupContainer.classList.add("flex");
-            showTab(tab);
-        }
+  <script>
+    function openPopup(tab = "signin") {
+      const popupContainer = document.getElementById("popupContainer");
+      popupContainer.classList.remove("hidden");
+      popupContainer.classList.add("flex");
+      showTab(tab);
+    }
 
-        function closePopup() {
-            const popupContainer = document.getElementById("popupContainer");
-            popupContainer.classList.remove("flex");
-            popupContainer.classList.add("hidden");
-        }
+    function closePopup() {
+      const popupContainer = document.getElementById("popupContainer");
+      popupContainer.classList.remove("flex");
+      popupContainer.classList.add("hidden");
+    }
 
-        document.getElementById("openPopup").addEventListener("click", function () {
-            openPopup("signin");
-        });
+    document.getElementById("openPopup").addEventListener("click", function () {
+      openPopup("signin");
+    });
 
-        document.getElementById("closePopup").addEventListener("click", closePopup);
+    document.getElementById("closePopup").addEventListener("click", closePopup);
 
-        window.addEventListener("click", function (event) {
-            const popupContainer = document.getElementById("popupContainer");
-            if (event.target === popupContainer) {
-                closePopup();
-            }
-        });
+    window.addEventListener("click", function (event) {
+      const popupContainer = document.getElementById("popupContainer");
+      if (event.target === popupContainer) {
+        closePopup();
+      }
+    });
 
-        function showTab(tabId) {
-            // Remove active states from all buttons and contents
-            document.querySelectorAll(".tab-button").forEach(btn => {
-                btn.classList.remove("active", "border-b-2", "border-teal-900", "text-teal-900");
-            });
-            document.querySelectorAll(".tab-content").forEach(tab => {
-                tab.classList.remove("active");
-                tab.classList.add("hidden");
-            });
-
-            // Add active states to selected tab
-            const activeButton = document.querySelector(`[onclick="showTab('${tabId}')"]`);
-            activeButton.classList.add("active", "border-b-2", "border-teal-900", "text-teal-900");
-            
-            const activeContent = document.getElementById(tabId);
-            activeContent.classList.remove("hidden");
-            activeContent.classList.add("active");
-        }
-    </script>
-
+    function showTab(tabId) {
+      document.querySelectorAll(".tab-button").forEach(btn => {
+        btn.classList.remove("active", "border-b-2", "border-teal-900", "text-teal-900");
+      });
+      document.querySelectorAll(".tab-content").forEach(tab => {
+        tab.classList.remove("active");
+        tab.classList.add("hidden");
+      });
+      const activeButton = document.querySelector(`[onclick="showTab('${tabId}')"]`);
+      activeButton.classList.add("active", "border-b-2", "border-teal-900", "text-teal-900");
+      const activeContent = document.getElementById(tabId);
+      activeContent.classList.remove("hidden");
+      activeContent.classList.add("active");
+    }
+  </script>
   <!-- Hero Section -->
   <section class="relative">
     <img class="w-full h-96 object-cover" height="600" src="HEADER.png" width="1920">
