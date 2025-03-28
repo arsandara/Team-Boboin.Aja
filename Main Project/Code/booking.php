@@ -1,73 +1,69 @@
 <?php
-// Inisialisasi variabel untuk menyimpan nilai input dan error
-$firstName = $lastName = $email = $phoneNumber =  $dateOfBirth = "";
-$firstNameErr = $lastNameErr = $emailErr = $phoneNumberErr =  $dateOfBirthErr = "";
-$earlyCheckIn = $lateCheckOut = $extraBed = false;
-$addOns = [];
+// ========================
+// DATABASE CONFIGURATION
+// ========================
+require 'connection.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validasi First Name
-    $firstName = $_POST["firstName"] ?? "";
-    if (empty($firstName)) {
-        $firstNameErr = "First Name wajib diisi";
-    }
+// Ambil data kamar dari database berdasarkan room_id
+$room_id = isset($_GET['room_id']) ? intval($_GET['room_id']) : 0;
 
-    // Validasi Email
-    $email = $_POST["email"] ?? "";
-    if (empty($email)) {
-        $emailErr = "Email wajib diisi";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $emailErr = "Format email tidak valid";
-    }
-
-    // Validasi Phone Number
-    $phoneNumber = $_POST["phoneNumber"] ?? "";
-    if (empty($phoneNumber)) {
-        $phoneNumberErr = "Nomor Telepon wajib diisi";
-    } elseif (!ctype_digit(str_replace('+', '', $phoneNumber))) {
-        $phoneNumberErr = "Nomor Telepon harus berupa angka";
-    }
-
-    // Validasi Date of Birth
-    $dateOfBirth = $_POST["dateOfBirth"] ?? "";
-    if (empty($dateOfBirth)) {
-        $dateOfBirthErr = "Tanggal lahir wajib diisi";
-    }
-
-    // Last Name (optional)
-    $lastName = $_POST["lastName"] ?? "";
-
-    // Check add-on options
-    $earlyCheckIn = isset($_POST["earlyCheckIn"]);
-    $lateCheckOut = isset($_POST["lateCheckOut"]);
-    $extraBed = isset($_POST["extraBed"]);
+try {
+    $stmt = $pdo->prepare("SELECT * FROM rooms WHERE id = ?");
+    $stmt->execute([$room_id]);
+    $room = $stmt->fetch();
     
-    if ($earlyCheckIn) $addOns[] = "Early Check In";
-    if ($lateCheckOut) $addOns[] = "Late Check Out";
-    if ($extraBed) $addOns[] = "Extra Bed";
+    if (!$room) {
+        die("Room not found");
+    }
+} catch (PDOException $e) {
+    die("Database error: " . $e->getMessage());
 }
 
-// Initialize variables with default values
-$roomCost = 3500000; // Rp 3.500.000
-$addOnCost = 0;
-$tax = 0;
-$totalCost = 0;
-
-// Calculate costs based on checkbox selections
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Update add-on cost based on selections
-    if (isset($_POST["earlyCheckIn"])) $addOnCost += 350000;
-    if (isset($_POST["lateCheckOut"])) $addOnCost += 350000;
-    if (isset($_POST["extraBed"])) $addOnCost += 100000;
-}
-
-// Calculate tax and total regardless of whether form was submitted
-$tax = ($roomCost + $addOnCost) * 0.1; // 10% tax
-$totalCost = $roomCost + $addOnCost + $tax;
-
-// Format currency
-function formatRupiah($number) {
-    return number_format($number, 0, ',', '.');
+// Proses form booking
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validasi input
+    $errors = [];
+    $guest_name = trim($_POST['guest_name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $check_in = $_POST['check_in'] ?? '';
+    $check_out = $_POST['check_out'] ?? '';
+    $persons = intval($_POST['persons'] ?? 1);
+    $special_requests = trim($_POST['special_requests'] ?? '');
+    
+    if (empty($guest_name)) $errors[] = "Full name is required";
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Valid email is required";
+    if (empty($check_in)) $errors[] = "Check-in date is required";
+    if (empty($check_out)) $errors[] = "Check-out date is required";
+    if ($check_in >= $check_out) $errors[] = "Check-out date must be after check-in date";
+    
+    // Jika tidak ada error, simpan ke database
+    if (empty($errors)) {
+        try {
+            $stmt = $pdo->prepare("INSERT INTO bookings 
+                                  (room_id, guest_name, email, check_in, check_out, persons, special_requests, total_price) 
+                                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            
+            $total_price = $room['price']; // Anda bisa menambahkan logika kalkulasi harga disini
+            
+            $stmt->execute([
+                $room_id,
+                $guest_name,
+                $email,
+                $check_in,
+                $check_out,
+                $persons,
+                $special_requests,
+                $total_price
+            ]);
+            
+            // Redirect ke halaman sukses
+            header("Location: booking_success.php?id=".$pdo->lastInsertId());
+            exit;
+            
+        } catch (PDOException $e) {
+            $errors[] = "Database error: " . $e->getMessage();
+        }
+    }
 }
 ?>
 

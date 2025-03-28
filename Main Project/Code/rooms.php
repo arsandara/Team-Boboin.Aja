@@ -232,9 +232,12 @@
             </div>
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 700.000</p>
-              <form action="booking.php" method="POST">
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
+              <form action="booking.php" method="GET">
+              <input type="hidden" name="room_id" value="1">
+              <input type="hidden" name="room_name" value="Deluxe Cabin">
+              <input type="hidden" name="room_price" value="700000">
+              <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
+                Book Now
                 </button>
               </form>
             </div>
@@ -267,9 +270,12 @@
             </div>
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 900.000</p>
-              <form action="booking.php" method="POST">
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
+              <form action="booking.php" method="GET">
+              <input type="hidden" name="room_id" value="1">
+              <input type="hidden" name="room_name" value="Executive Cabin">
+              <input type="hidden" name="room_price" value="900000">
+              <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
+                Book Now
                 </button>
               </form>
             </div>
@@ -303,9 +309,12 @@
             </div>
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 1.250.000</p>
-              <form action="booking.php" method="POST">
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
+              <form action="booking.php" method="GET">
+              <input type="hidden" name="room_id" value="1">
+              <input type="hidden" name="room_name" value="Executive Cabin with Jacuzzi">
+              <input type="hidden" name="room_price" value="1250000">
+              <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
+                Book Now
                 </button>
               </form>
             </div>
@@ -338,9 +347,12 @@
             </div>
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 1.100.000</p>
-              <form action="booking.php" method="POST">
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
+              <form action="booking.php" method="GET">
+              <input type="hidden" name="room_id" value="1"> <!-- ID kamar disesuaikan -->
+              <input type="hidden" name="room_name" value="Deluxe Cabin">
+              <input type="hidden" name="room_price" value="700000">
+              <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
+                Book Now
                 </button>
               </form>
             </div>
@@ -374,9 +386,12 @@
             </div>
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 1.500.000</p>
-              <form action="booking.php" method="POST">
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
+              <form action="booking.php" method="GET">
+              <input type="hidden" name="room_id" value="1">
+              <input type="hidden" name="room_name" value="Family Cabin with Jacuzzi">
+              <input type="hidden" name="room_price" value="1500000">
+              <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
+                Book Now
                 </button>
               </form>
             </div>
@@ -413,9 +428,12 @@
             </div>
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 750.000</p>
-              <form action="booking.php" method="POST">
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
+              <form action="booking.php" method="GET">
+              <input type="hidden" name="room_id" value="1">
+              <input type="hidden" name="room_name" value="2 Paws Cabin ">
+              <input type="hidden" name="room_price" value="750000">
+              <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
+                Book Now
                 </button>
               </form>
             </div>
@@ -452,9 +470,12 @@
             </div>
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 1.000.000</p>
-              <form action="booking.php" method="POST">
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
+              <form action="booking.php" method="GET">
+              <input type="hidden" name="room_id" value="1"> 
+              <input type="hidden" name="room_name" value="4 Paws Cabin">
+              <input type="hidden" name="room_price" value="1000000">
+              <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
+                Book Now
                 </button>
               </form>
             </div>
@@ -491,9 +512,12 @@
             </div>
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 1.150.000</p>
-              <form action="booking.php" method="POST">
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
+              <form action="booking.php" method="GET">
+              <input type="hidden" name="room_id" value="1">
+              <input type="hidden" name="room_name" value="Romantic Cabin">
+              <input type="hidden" name="room_price" value="1150000">
+              <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
+                Book Now
                 </button>
               </form>
             </div>
@@ -531,9 +555,12 @@
             </div>
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 1.650.000</p>
-              <form action="booking.php" method="POST">
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
+              <form action="booking.php" method="GET">
+              <input type="hidden" name="room_id" value="1"> 
+              <input type="hidden" name="room_name" value="Romantic Cabin With Jacuzzi">
+              <input type="hidden" name="price" value="1650000">
+              <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
+                Book Now
                 </button>
               </form>
             </div>
