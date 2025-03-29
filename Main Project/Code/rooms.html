@@ -172,21 +172,17 @@
   <!-- Cabin Filters -->
   <div class="container mx-auto my-8 px-6">
     <div class="flex space-x-2 mb-6 overflow-x-auto">
-      <button class="bg-teal-900 text-white px-4 py-2 rounded" onclick="filterCabins('all')">All</button>
-      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('family')">Family
-        Cabin</button>
-      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('jacuzzi')">Jacuzzi
-        Cabin</button>
-      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('pet')">Pet Friendly
-        Cabin</button>
-      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('romantic')">Romantic
-        Cabin</button>
+      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('all')">All</button>
+      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('family')">Family Cabin</button>
+      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('jacuzzi')">Jacuzzi Cabin</button>
+      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('pet')">Pet Friendly Cabin</button>
+      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('romantic')">Romantic Cabin</button>
     </div>
     <script>
       function filterCabins(type) {
         // Ambil semua elemen cabin-card
         const cabins = document.querySelectorAll('.cabin-card');
-
+    
         // Iterasi setiap cabin-card
         cabins.forEach(cabin => {
           if (type === 'all') {
@@ -201,22 +197,34 @@
             }
           }
         });
-
+    
+        // Hanya pilih tombol filter (bukan tombol Book Now)
+        const filterButtons = document.querySelectorAll('.container > .flex > button');
         
-        const buttons = document.querySelectorAll('.container .flex button');
-        
-        buttons.forEach(button => {
+        // Reset semua tombol filter ke state default
+        filterButtons.forEach(button => {
           button.classList.remove('bg-teal-900', 'text-white');
-          button.classList.add('bg-white', 'border', 'border-gray-300', 'text-black');
+          button.classList.add('bg-white', 'border', 'border-gray-300');
         });
-
-        // Tambahkan warna hijau ke tombol yang diklik
-        const activeButton = document.querySelector(`button[onclick="filterCabins('${type}')"]`);
-        activeButton.classList.remove('bg-white', 'border-gray-300', 'text-black');
-        activeButton.classList.add('bg-teal-900', 'text-white');
+    
+        // Set tombol filter yang aktif ke state hijau
+        const activeFilterButton = document.querySelector(`.container > .flex > button[onclick="filterCabins('${type}')"]`);
+        if (activeFilterButton) {
+          activeFilterButton.classList.remove('bg-white', 'border-gray-300');
+          activeFilterButton.classList.add('bg-teal-900', 'text-white');
+        }
       }
-
+    
+      // Set tombol "All" sebagai aktif secara default saat halaman dimuat
+      document.addEventListener('DOMContentLoaded', function() {
+        const allButton = document.querySelector(`.container > .flex > button[onclick="filterCabins('all')"]`);
+        if (allButton) {
+          allButton.classList.remove('bg-white', 'border-gray-300');
+          allButton.classList.add('bg-teal-900', 'text-white');
+        }
+      });
     </script>
+
     <!-- Cabin Listings -->
     <div class="space-y-6">
       <div class="space-y-6">
