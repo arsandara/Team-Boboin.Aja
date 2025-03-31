@@ -3,7 +3,7 @@
 $host = 'localhost';
 $user = 'root';
 $pass = '';
-$dbname = 'db_BoboinAja';
+$dbname = 'db_boboinaja';
 
 $conn = new mysqli($host, $user, $pass, $dbname3);
 
