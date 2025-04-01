@@ -16,7 +16,6 @@
     <div class="container mx-auto flex justify-between items-center py-4 px-6">
       <div class="flex items-center">
         <img alt="Boboin.Aja logo" class="h-10 mr-3" height="50" src="Logo.png" width="100">
-        </span>
       </div>
       <nav class="space-x-6">
         <a class="hover:text-gray-300" href="home.html">
@@ -28,11 +27,11 @@
         <a class="hover:text-gray-300" href="facilities.html">
           Facilities
         </a>
-        <a class="hover:text-gray-300" href="#">
+        <a class="hover:text-gray-300" href="contact.html">
           Contact
-          <script>
-          </script>
+        </a>
       </nav>
+
       <!-- Button -->
       <button id="openPopup" class="bg-white text-teal-900 px-4 py-2 rounded hover:bg-gray-200">Login / Sign Up</button>
     </div>
@@ -162,9 +161,7 @@
             </option>
           </select>
         </div>
-
         <button class="bg-teal-900 text-white px-4 py-2 rounded-md">Available Room</button>
-        </script>
       </div>
     </div>
   </section>
@@ -255,9 +252,7 @@
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 700.000</p>
               <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="1">
-                <input type="hidden" name="room_name" value="Deluxe Cabin">
-                <input type="hidden" name="room_price" value="700000">
+                <input type="hidden" name="room_id" value="1"> <!-- Sesuai database -->
                 <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
                   Book Now
                 </button>
@@ -293,9 +288,7 @@
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 900.000</p>
               <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="1">
-                <input type="hidden" name="room_name" value="Executive Cabin">
-                <input type="hidden" name="room_price" value="900000">
+                <input type="hidden" name="room_id" value="2"> <!-- Sesuai database -->
                 <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
                   Book Now
                 </button>
@@ -332,11 +325,11 @@
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 1.250.000</p>
               <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="1">
-                <input type="hidden" name="room_name" value="Executive Cabin with Jacuzzi">
-                <input type="hidden" name="room_price" value="1250000">
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
+                    <input type="hidden" name="room_id" value="3"> <!-- Sesuai database -->
+                    <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
+                      Book Now
+                    </button>
+                  </form>
                 </button>
               </form>
             </div>
@@ -370,9 +363,7 @@
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 1.100.000</p>
               <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="1"> <!-- ID kamar disesuaikan -->
-                <input type="hidden" name="room_name" value="Deluxe Cabin">
-                <input type="hidden" name="room_price" value="700000">
+                <input type="hidden" name="room_id" value="4"> <!-- Sesuai database -->
                 <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
                   Book Now
                 </button>
@@ -409,9 +400,7 @@
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 1.500.000</p>
               <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="1">
-                <input type="hidden" name="room_name" value="Family Cabin with Jacuzzi">
-                <input type="hidden" name="room_price" value="1500000">
+                <input type="hidden" name="room_id" value="5"> <!-- Sesuai database -->
                 <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
                   Book Now
                 </button>
@@ -451,9 +440,7 @@
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 750.000</p>
               <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="1">
-                <input type="hidden" name="room_name" value="2 Paws Cabin ">
-                <input type="hidden" name="room_price" value="750000">
+                <input type="hidden" name="room_id" value="6"> <!-- Sesuai database -->
                 <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
                   Book Now
                 </button>
@@ -493,9 +480,7 @@
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 1.000.000</p>
               <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="1">
-                <input type="hidden" name="room_name" value="4 Paws Cabin">
-                <input type="hidden" name="room_price" value="1000000">
+                <input type="hidden" name="room_id" value="7"> <!-- Sesuai database -->
                 <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
                   Book Now
                 </button>
@@ -535,9 +520,7 @@
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 1.150.000</p>
               <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="1">
-                <input type="hidden" name="room_name" value="Romantic Cabin">
-                <input type="hidden" name="room_price" value="1150000">
+                <input type="hidden" name="room_id" value="8"> <!-- Sesuai database -->
                 <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
                   Book Now
                 </button>
@@ -578,13 +561,11 @@
             <div class="mt-6 flex justify-between items-center">
               <p class="text-2xl font-bold text-gray-900">Rp. 1.650.000</p>
               <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="1">
-                <input type="hidden" name="room_name" value="Romantic Cabin With Jacuzzi">
-                <input type="hidden" name="price" value="1650000">
+                <input type="hidden" name="room_id" value="9"> <!-- Sesuai database -->
                 <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
+                    Book Now
                 </button>
-              </form>
+                </form>
             </div>
           </div>
         </div>

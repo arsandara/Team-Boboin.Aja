@@ -3,19 +3,11 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Boboin.Aja</title>
-
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- External CSS -->
   <link rel="stylesheet" href="style.css">
-
-  <!-- Font Awesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 
@@ -36,11 +28,11 @@
         <a class="hover:text-gray-300" href="facilities.html">
           Facilities
         </a>
-        <a class="hover:text-gray-300" href="#">
+        <a class="hover:text-gray-300" href="contact.html">
           Contact
-          <script>
-          </script>
+        </a>
       </nav>
+      
       <!-- Button -->
       <button id="openPopup" class="bg-white text-teal-900 px-4 py-2 rounded hover:bg-gray-200">Login / Sign Up</button>
     </div>
@@ -176,6 +168,62 @@
       </div>
     </div>
   </section>
+
+  <!-- Cabin Filters -->
+  <div class="container mx-auto my-8 px-6">
+    <div class="flex space-x-2 mb-6 overflow-x-auto">
+      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('all')">All</button>
+      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('family')">Family Cabin</button>
+      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('jacuzzi')">Jacuzzi Cabin</button>
+      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('pet')">Pet Friendly Cabin</button>
+      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('romantic')">Romantic Cabin</button>
+    </div>
+    <script>
+      function filterCabins(type) {
+        // Ambil semua elemen cabin-card
+        const cabins = document.querySelectorAll('.cabin-card');
+    
+        // Iterasi setiap cabin-card
+        cabins.forEach(cabin => {
+          if (type === 'all') {
+            // Tampilkan semua kamar
+            cabin.style.display = 'block';
+          } else {
+            // Hanya tampilkan kamar yang memiliki kelas kategori yang sesuai
+            if (cabin.classList.contains(type)) {
+              cabin.style.display = 'block';
+            } else {
+              cabin.style.display = 'none';
+            }
+          }
+        });
+    
+        // Hanya pilih tombol filter (bukan tombol Book Now)
+        const filterButtons = document.querySelectorAll('.container > .flex > button');
+        
+        // Reset semua tombol filter ke state default
+        filterButtons.forEach(button => {
+          button.classList.remove('bg-teal-900', 'text-white');
+          button.classList.add('bg-white', 'border', 'border-gray-300');
+        });
+    
+        // Set tombol filter yang aktif ke state hijau
+        const activeFilterButton = document.querySelector(`.container > .flex > button[onclick="filterCabins('${type}')"]`);
+        if (activeFilterButton) {
+          activeFilterButton.classList.remove('bg-white', 'border-gray-300');
+          activeFilterButton.classList.add('bg-teal-900', 'text-white');
+        }
+      }
+    
+      // Set tombol "All" sebagai aktif secara default saat halaman dimuat
+      document.addEventListener('DOMContentLoaded', function() {
+        const allButton = document.querySelector(`.container > .flex > button[onclick="filterCabins('all')"]`);
+        if (allButton) {
+          allButton.classList.remove('bg-white', 'border-gray-300');
+          allButton.classList.add('bg-teal-900', 'text-white');
+        }
+      });
+    </script>
 
   <!-- Explore Amazing Rooms -->
   <section class="container mx-auto py-12 px-6">

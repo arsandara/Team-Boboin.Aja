@@ -27,11 +27,11 @@
         <a class="hover:text-gray-300" href="facilities.html">
           Facilities
         </a>
-        <a class="hover:text-gray-300" href="#">
+        <a class="hover:text-gray-300" href="contact.html">
           Contact
-          <script>
-          </script>
+        </a>
       </nav>
+      
       <!-- Button -->
       <button id="openPopup" class="bg-white text-teal-900 px-4 py-2 rounded hover:bg-gray-200">Login / Sign Up</button>
     </div>
