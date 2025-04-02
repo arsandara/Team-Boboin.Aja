@@ -50,9 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Calculate total price
     $base_price = $room['price'];
     $addons = 0;
-    if ($early_checkin) $addons += 50000000;
-    if ($late_checkout) $addons += 50000000;
-    if ($extra_bed) $addons += 50000000;
+    if ($early_checkin) $addons += 350000;
+    if ($late_checkout) $addons += 350000;
+    if ($extra_bed) $addons += 150000;
     $tax = ($base_price + $addons) * 0.1;
     $total_price = $base_price + $addons + $tax;
 
@@ -104,268 +104,176 @@ function formatRupiah($number) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking - <?php echo htmlspecialchars($room['name']); ?> | Boboin.Aja</title>
+    <title>Boboin.aja - Review Booking</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="booking.css">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
-        .error {
-            color: red;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-        }
-        .date-input {
-            display: flex;
-            gap: 0.5rem;
-        }
-        .date-input input {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-        }
-    </style>
 </head>
-<body class="bg-gray-100">
-    
-    <!-- Header Section - Simplified -->
-    <header class="bg-teal-900 text-white">
-        <div class="container mx-auto flex justify-between items-center py-4 px-6">
-            <div class="flex items-center">
-                <img alt="Boboin.Aja logo" class="h-10 mr-3" src="Logo.png">
-            </div>
-            <div class="text-xl font-bold">Review Booking</div>
-        </div>
-    </header>
 
-    <!-- Main Content -->
-    <div class="container mx-auto py-8 px-4 max-w-4xl"> <!-- Reduced max-width -->
-    <div class="bg-white rounded-lg shadow-md p-6"> <!-- Reduced padding -->
-        <!-- Room Information with Image -->
-        <div class="mb-8">
-            <div class="flex flex-col md:flex-row gap-6 items-start">
-                <div class="md:w-1/3">
-                    <img src="<?php echo htmlspecialchars($room['name']).'.png'; ?>" alt="<?php echo htmlspecialchars($room['name']); ?>" class="w-full rounded-lg">
-                </div>
-                <div class="md:w-2/3">
-                    <h1 class="text-2xl font-bold text-gray-800"><?php echo htmlspecialchars($room['name']); ?></h1>
-                    <div class="flex items-center mt-2">
-                        <div class="flex text-yellow-400 mr-4">
-                            <i class="fas fa-sync-alt mr-1"></i>
-                            <span class="ml-1 text-gray-700"><?php echo $room['rating']; ?> (IK+ Reviews)</span>
-                        </div>
-                        <div class="flex items-center text-gray-700">
-                            <i class="fas fa-sync-alt mr-1"></i>
-                            <span><?php echo $room['capacity']; ?> peoples</span>
-                        </div>
-                        <?php if ($room['breakfast_included']): ?>
-                        <div class="flex items-center text-gray-700 ml-4">
-                            <i class="fas fa-sync-alt mr-1"></i>
-                            <span>Breakfast</span>
-                        </div>
-                        <?php endif; ?>
-                    </div>
-                    <div class="mt-4">
-                        <p class="text-2xl font-bold text-teal-900"><?php echo formatRupiah($room['price']); ?></p>
-                    </div>
-                </div>
+<body>
+    <!-- Header tetap dipertahankan -->
+    <div class="header">
+        <img src="LOGO.png" alt="boboin.aja" class="logo">
+        <div class="page-title">Review Booking</div>
+        <div style="width: 100px;"></div>
+    </div>
+
+    <div class="container mx-auto p-4 max-w-4xl">
+        <!-- Card informasi booking -->
+        <div class="booking-details">
+            <div class="booking-detail-item">
+                <h4>Check In</h4>
+                <p><?php echo htmlspecialchars($_POST['check_in'] ?? ''); ?> (14.00 WIB)</p>
             </div>
-                
-                <!-- Check In/Out Dates -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg mt-4">
-                <div>
-                    <label class="block text-gray-700 text-sm font-medium mb-1">Check In</label>
-                    <div class="bg-white p-3 rounded-lg">
-                        <input type="date" id="check_in" name="check_in" value="<?php echo htmlspecialchars($_POST['check_in'] ?? ''); ?>" 
-                               class="w-full font-medium focus:outline-none" required>
-                    </div>
+            <div class="booking-detail-item">
+                <h4>Check Out</h4>
+                <p><?php echo htmlspecialchars($_POST['check_out'] ?? ''); ?> (12.00 WIB)</p>
+            </div>
+            <div class="booking-detail-item">
+                <h4>Person</h4>
+                <p><?php echo intval($_POST['persons'] ?? 1); ?> Person</p>
+            </div>
+        </div>
+
+        <!-- Card informasi kamar -->
+        <div class="room-card">
+            <div class="flex flex-col md:flex-row gap-4 p-4">
+                <div class="w-full md:w-1/3">
+                    <img src="<?php echo htmlspecialchars($room['image'] ?? 'default-room.jpg'); ?>" alt="<?php echo htmlspecialchars($room['name'] ?? 'Room'); ?>" class="w-full rounded-lg">
                 </div>
-                <div>
-                    <label class="block text-gray-700 text-sm font-medium mb-1">Check Out</label>
-                    <div class="bg-white p-3 rounded-lg">
-                        <input type="date" id="check_out" name="check_out" value="<?php echo htmlspecialchars($_POST['check_out'] ?? ''); ?>" 
-                               class="w-full font-medium focus:outline-none" required>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-gray-700 text-sm font-medium mb-1">Person</label>
-                    <div class="bg-white p-3 rounded-lg">
-                        <select id="persons" name="persons" class="w-full font-medium focus:outline-none">
-                            <?php for ($i = 1; $i <= $room['capacity']; $i++): ?>
-                                <option value="<?php echo $i; ?>">
-                                    <?php echo $i; ?> person<?php echo $i > 1 ? 's' : ''; ?>
-                                </option>
-                            <?php endfor; ?>
-                        </select>
-                    </div>
+                <div class="w-full md:w-2/3">
+                    <h1 class="text-xl font-bold"><?php echo htmlspecialchars($room['name'] ?? 'Room Name'); ?></h1>
+                    <p class="text-gray-700 mt-2">⭐ <?php echo htmlspecialchars($room['rating'] ?? '0'); ?> </p>
+                    <p class="text-gray-700">👥 <?php echo htmlspecialchars($room['capacity'] ?? '0'); ?> peoples</p>
+                    <?php if ($room['breakfast_included'] ?? false): ?>
+                        <p class="text-gray-700">🍳 Breakfast included</p>
+                    <?php endif; ?>
+                    <p class="text-2xl font-bold text-teal-900 mt-2">Rp. <?php echo number_format($room['price'] ?? 0, 0, ',', '.'); ?></p>
                 </div>
             </div>
         </div>
 
-            <!-- Booking Form -->
-            <form method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Personal Information -->
-        <div class="mb-8">
-            <h2 class="text-xl font-bold text-gray-800 mb-6">Personal Information</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Form personal information -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-bold mb-4">Personal Information</h2>
+            <form method="POST" class="space-y-4">
                 <div>
-                    <label class="block text-gray-700 mb-2" for="first_name">First Name*</label>
-                    <input type="text" id="first_name" name="first_name" 
-                           class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                    <input type="text" name="first_name" class="input-field" placeholder="First Name*" required>
                 </div>
-                
                 <div>
-                    <label class="block text-gray-700 mb-2" for="last_name">Last Name</label>
-                    <input type="text" id="last_name" name="last_name" 
-                           class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    <input type="text" name="last_name" class="input-field" placeholder="Last Name">
                 </div>
-                
-                <div class="md:col-span-2">
-                    <label class="block text-gray-700 mb-2" for="date_of_birth">Date of Birth*</label>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth*</label>
                     <div class="date-input">
-                        <input type="text" id="day" placeholder="dd" maxlength="2" class="text-center p-2 border rounded">
-                        <input type="text" id="month" placeholder="mm" maxlength="2" class="text-center p-2 border rounded">
-                        <input type="text" id="year" placeholder="yyyy" maxlength="4" class="text-center p-2 border rounded">
+                        <input type="text" name="day" class="input-field" placeholder="dd" maxlength="2" required>
+                        <input type="text" name="month" class="input-field" placeholder="mm" maxlength="2" required>
+                        <input type="text" name="year" class="input-field" placeholder="yyyy" maxlength="4" required>
                     </div>
-                    <input type="hidden" id="date_of_birth" name="date_of_birth">
                 </div>
-                
-                <div class="md:col-span-2">
-                    <label class="block text-gray-700 mb-2" for="email">Email*</label>
-                    <input type="email" id="email" name="email" 
-                           class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                <div>
+                    <input type="email" name="email" class="input-field" placeholder="Email*" required>
                 </div>
-                
-                <div class="md:col-span-2">
-                    <label class="block text-gray-700 mb-2" for="phone">Phone Number*</label>
+                <div>
                     <div class="flex">
-                        <span class="inline-flex items-center px-4 rounded-l-lg border border-r-0 bg-gray-100 text-gray-700">+62</span>
-                        <input type="tel" id="phone" name="phone" 
-                               class="w-full px-4 py-3 border rounded-r-lg focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500">+62</span>
+                        <input type="tel" name="phone" class="input-field rounded-l-none" placeholder="Phone Number*" required>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Add On Request -->
-        <div class="mb-8">
-            <h2 class="text-xl font-bold text-gray-800 mb-6">Add On Request</h2>
-            
-            <div class="space-y-4">
-                <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
-                    <div class="flex items-center">
-                        <input type="checkbox" id="early_checkin" name="early_checkin" value="1" class="h-5 w-5 text-teal-600 rounded focus:ring-teal-500">
-                        <label for="early_checkin" class="ml-3 text-gray-700 font-medium">Early Check In (11.00 WIB)</label>
-                    </div>
-                    <span class="text-gray-700 font-medium"><?php echo formatRupiah(350000); ?></span>
+                <!-- Add On Request dengan jarak yang lebih rapat -->
+                <h2 class="text-xl font-bold mt-4 compact-section">Add On Request</h2>
+                <div class="space-y-2 compact-space"> <!-- Mengurangi space-y dari 3 ke 2 -->
+                    <label class="flex items-center justify-between py-1 compact-space"> <!-- Mengurangi padding-y -->
+                        <div class="flex items-center">
+                            <input type="checkbox" name="early_checkin" id="early_checkin" class="h-5 w-5 text-teal-600 rounded addon-checkbox" 
+                                   data-price="350000" <?php echo isset($_POST['early_checkin']) ? 'checked' : ''; ?>>
+                            <span class="ml-2">Early Check In (11:00 WIB)</span>
+                        </div>
+                        <span class="text-teal-900 font-medium"><?php echo formatRupiah(350000); ?></span>
+                    </label>
+                    <label class="flex items-center justify-between py-1 compact-space">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="late_checkout" id="late_checkout" class="h-5 w-5 text-teal-600 rounded addon-checkbox" 
+                                   data-price="350000" <?php echo isset($_POST['late_checkout']) ? 'checked' : ''; ?>>
+                            <span class="ml-2">Late Check Out (15:00 WIB)</span>
+                        </div>
+                        <span class="text-teal-900 font-medium"><?php echo formatRupiah(350000); ?></span>
+                    </label>
+                    <label class="flex items-center justify-between py-1 compact-space">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="extra_bed" id="extra_bed" class="h-5 w-5 text-teal-600 rounded addon-checkbox" 
+                                   data-price="150000" <?php echo isset($_POST['extra_bed']) ? 'checked' : ''; ?>>
+                            <span class="ml-2">Extra Bed</span>
+                        </div>
+                        <span class="text-teal-900 font-medium"><?php echo formatRupiah(150000); ?></span>
+                    </label>
                 </div>
-                
-                <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
-                    <div class="flex items-center">
-                        <input type="checkbox" id="late_checkout" name="late_checkout" value="1" class="h-5 w-5 text-teal-600 rounded focus:ring-teal-500">
-                        <label for="late_checkout" class="ml-3 text-gray-700 font-medium">Late Check Out (15.00 WIB)</label>
-                    </div>
-                    <span class="text-gray-700 font-medium"><?php echo formatRupiah(350000); ?></span>
-                </div>
-                
-                <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
-                    <div class="flex items-center">
-                        <input type="checkbox" id="extra_bed" name="extra_bed" value="1" class="h-5 w-5 text-teal-600 rounded focus:ring-teal-500">
-                        <label for="extra_bed" class="ml-3 text-gray-700 font-medium">Extra Bed</label>
-                    </div>
-                    <span class="text-gray-700 font-medium"><?php echo formatRupiah(100000); ?></span>
-                </div>
-            </div>
-        </div>
 
-        <!-- Payment Summary -->
-        <div>
-            <h2 class="text-xl font-bold text-gray-800 mb-6">Payment Details</h2>
-            
-            <div class="bg-gray-50 p-6 rounded-lg">
-                <div class="space-y-4">
-                    <div class="flex justify-between">
-                        <span class="text-gray-700"><?php echo htmlspecialchars($room['name']); ?> (<span id="nights-count">1</span> nights)</span>
-                        <span class="text-gray-700" id="room-price"><?php echo formatRupiah($room['price']); ?></span>
+                <!-- Payment Details dengan jarak yang lebih rapat -->
+                <h2 class="text-xl font-bold mt-4 compact-section">Payment Details</h2>
+                <div class="bg-gray-50 p-3 rounded-lg compact-space"> <!-- Mengurangi padding -->
+                    <div class="flex justify-between py-1 compact-space">
+                        <span><?php echo htmlspecialchars($room['name']); ?> (<span id="nights-count"><?php echo $nights ?? 1; ?></span> nights)</span>
+                        <span id="room-price"><?php echo formatRupiah($room['price']); ?></span>
                     </div>
-                    
-                    <div class="flex justify-between">
-                        <span class="text-gray-700">Request add-on</span>
-                        <span class="text-gray-700" id="addons-total">Rp 0</span>
+                    <div class="flex justify-between py-1 compact-space">
+                        <span>Request add-on</span>
+                        <span id="addons-total"><?php echo formatRupiah($addons ?? 0); ?></span>
                     </div>
-                    
-                    <div class="flex justify-between">
-                        <span class="text-gray-700">Tax (10%)</span>
-                        <span class="text-gray-700" id="tax-amount"><?php echo formatRupiah($room['price'] * 0.1); ?></span>
+                    <div class="flex justify-between py-1 compact-space">
+                        <span>Tax (10%)</span>
+                        <span id="tax-amount"><?php echo formatRupiah(($room['price'] + ($addons ?? 0)) * 0.1); ?></span>
                     </div>
-                    
-                    <div class="border-t border-gray-300 my-4"></div>
-                    
-                    <div class="flex justify-between font-bold">
-                        <span class="text-gray-800">Total</span>
-                        <span class="text-teal-900" id="total-price"><?php echo formatRupiah($room['price'] * 1.1); ?></span>
+                    <div class="flex justify-between font-bold py-1 border-t border-gray-300 mt-1 compact-space">
+                        <span>Total</span>
+                        <span id="total-price"><?php echo formatRupiah($total_price ?? ($room['price'] * 1.1)); ?></span>
                     </div>
                 </div>
-                
-                <button type="submit" class="w-full bg-teal-900 text-white py-3 rounded-lg font-bold mt-8 hover:bg-teal-800 transition duration-200">
-                    Complete Booking
-                </button>
-            </div>
+
+                <button type="submit" class="mt-4 w-full bg-teal-900 text-white py-3 rounded-lg font-bold hover:bg-teal-800 transition duration-200">Complete Booking</button>
+            </form>
         </div>
     </div>
-</div>
 
-<script>
-    // Calculate nights and update price
-    const checkInInput = document.getElementById('check_in');
-    const checkOutInput = document.getElementById('check_out');
-    const nightsCount = document.getElementById('nights-count');
-    const roomPrice = document.getElementById('room-price');
-    
-    function calculateNights() {
-        if (checkInInput.value && checkOutInput.value) {
-            const checkInDate = new Date(checkInInput.value);
-            const checkOutDate = new Date(checkOutInput.value);
-            const diffTime = checkOutDate - checkInDate;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            
-            if (diffDays > 0) {
-                nightsCount.textContent = diffDays;
-                const totalRoomPrice = <?php echo $room['price']; ?> * diffDays;
-                roomPrice.textContent = 'Rp ' + totalRoomPrice.toLocaleString('id-ID');
-                calculateTotal();
+    <script>
+            // Fungsi untuk menghitung total harga
+            function calculateTotal() {
+                const roomPrice = <?php echo $room['price']; ?>;
+                const nights = parseInt(document.getElementById('nights-count').textContent) || 1;
+                const basePrice = roomPrice * nights;
+                
+                let addonsTotal = 0;
+                document.querySelectorAll('.addon-checkbox:checked').forEach(checkbox => {
+                    addonsTotal += parseInt(checkbox.dataset.price);
+                });
+                
+                const subtotal = basePrice + addonsTotal;
+                const tax = subtotal * 0.1;
+                const total = subtotal + tax;
+                
+                // Update tampilan
+                document.getElementById('addons-total').textContent = 'Rp ' + addonsTotal.toLocaleString('id-ID');
+                document.getElementById('tax-amount').textContent = 'Rp ' + Math.round(tax).toLocaleString('id-ID');
+                document.getElementById('total-price').textContent = 'Rp ' + Math.round(total).toLocaleString('id-ID');
+                
+                // Update nilai untuk form submission
+                document.getElementById('room-price-value').value = basePrice;
+                document.getElementById('addons-total-value').value = addonsTotal;
+                document.getElementById('total-price-value').value = total;
             }
-        }
-    }
-    
-    checkInInput.addEventListener('change', calculateNights);
-    checkOutInput.addEventListener('change', calculateNights);
-    
-    // Update the calculateTotal function to include nights
-    function calculateTotal() {
-        const nights = parseInt(nightsCount.textContent) || 1;
-        const basePrice = <?php echo $room['price']; ?> * nights;
-        let addons = 0;
-        
-        if (earlyCheckin.checked) addons += 350000;
-        if (lateCheckout.checked) addons += 350000;
-        if (extraBed.checked) addons += 100000;
-        
-        const subtotal = basePrice + addons;
-        const tax = subtotal * 0.1;
-        const total = subtotal + tax;
-        
-        addonsTotal.textContent = 'Rp ' + addons.toLocaleString('id-ID');
-        taxAmount.textContent = 'Rp ' + Math.round(tax).toLocaleString('id-ID');
-        totalPrice.textContent = 'Rp ' + Math.round(total).toLocaleString('id-ID');
-    }
-</script>
+            
+            // Event listener untuk checkbox add-on
+            document.querySelectorAll('.addon-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', calculateTotal);
+            });
+            
+            // Hitung total saat halaman pertama kali dimuat
+            document.addEventListener('DOMContentLoaded', calculateTotal);
+        </script>
+    </body>
+    </html>
