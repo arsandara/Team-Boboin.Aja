@@ -6,6 +6,11 @@ $errors = [];
 $room = [];
 $room_id = isset($_GET['room_id']) ? intval($_GET['room_id']) : 0;
 
+// Helper function to format price
+function formatRupiah($number) {
+    return 'Rp. ' . number_format($number, 0, ',', '.');
+}
+
 // Get room details from database
 if ($room_id > 0) {
     try {
@@ -18,6 +23,7 @@ if ($room_id > 0) {
         if (!$room) {
             die("Room not found");
         }
+        
     } catch (Exception $e) {
         die("Database error: " . $e->getMessage());
     }
@@ -25,81 +31,11 @@ if ($room_id > 0) {
     die("Invalid room selection");
 }
 
-// Process booking form
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $first_name = trim($_POST['first_name'] ?? '');
-    $last_name = trim($_POST['last_name'] ?? '');
-    $date_of_birth = trim($_POST['date_of_birth'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $phone = trim($_POST['phone'] ?? '');
-    $check_in = $_POST['check_in'] ?? '';
-    $check_out = $_POST['check_out'] ?? '';
-    $persons = intval($_POST['persons'] ?? 1);
-    $early_checkin = isset($_POST['early_checkin']) ? 1 : 0;
-    $late_checkout = isset($_POST['late_checkout']) ? 1 : 0;
-    $extra_bed = isset($_POST['extra_bed']) ? 1 : 0;
-
-    // Validate inputs
-    if (empty($first_name)) $errors[] = "First name is required";
-    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Valid email is required";
-    if (empty($phone)) $errors[] = "Phone number is required";
-    if (empty($check_in)) $errors[] = "Check-in date is required";
-    if (empty($check_out)) $errors[] = "Check-out date is required";
-    if ($check_in >= $check_out) $errors[] = "Check-out date must be after check-in date";
-
-    // Calculate total price
-    $base_price = $room['price'];
-    $addons = 0;
-    if ($early_checkin) $addons += 350000;
-    if ($late_checkout) $addons += 350000;
-    if ($extra_bed) $addons += 150000;
-    $tax = ($base_price + $addons) * 0.1;
-    $total_price = $base_price + $addons + $tax;
-
-    // Calculate number of nights
-    $check_in_date = new DateTime($check_in);
-    $check_out_date = new DateTime($check_out);
-    $nights = $check_out_date->diff($check_in_date)->days;
-
-    // Save to database if no errors
-    if (empty($errors)) {
-        try {
-            $stmt = $conn->prepare("INSERT INTO bookings 
-                                  (room_id, first_name, last_name, date_of_birth, email, phone, check_in, check_out, persons, 
-                                  early_checkin, late_checkout, extra_bed, total_price, nights) 
-                                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            
-            $stmt->bind_param("isssssssiiiiii", 
-                $room_id,
-                $first_name,
-                $last_name,
-                $date_of_birth,
-                $email,
-                $phone,
-                $check_in,
-                $check_out,
-                $persons,
-                $early_checkin,
-                $late_checkout,
-                $extra_bed,
-                $total_price,
-                $nights
-            );
-            
-            $stmt->execute();
-            
-            header("Location: booking_success.php?id=".$conn->insert_id);
-            exit;
-            
-        } catch (Exception $e) {
-            $errors[] = "Database error: " . $e->getMessage();
-        }
-    }
-}
-
-// Helper function to format price
-function formatRupiah($number) {
-    return 'Rp. ' . number_format($number, 0, ',', '.');
+$image_path = $_SERVER['DOCUMENT_ROOT'] . '/Code/' . $room['image_booking'];
+if (file_exists($image_path)) {
+    echo "<!-- File exists at: " . $image_path . " -->";
+} else {
+    echo "<!-- File NOT found at: " . $image_path . " -->";
 }
 ?>
 
@@ -115,130 +51,146 @@ function formatRupiah($number) {
 </head>
 
 <body>
-    <!-- Header tetap dipertahankan -->
     <div class="header">
         <img src="LOGO.png" alt="boboin.aja" class="logo">
         <div class="page-title">Review Booking</div>
-        <div style="width: 100px;"></div>
     </div>
 
     <div class="container mx-auto p-4 max-w-4xl">
-        <!-- Card informasi booking -->
-        <div class="booking-details">
-            <div class="booking-detail-item">
-                <h4>Check In</h4>
-                <p><?php echo htmlspecialchars($_POST['check_in'] ?? ''); ?> (14.00 WIB)</p>
-            </div>
-            <div class="booking-detail-item">
-                <h4>Check Out</h4>
-                <p><?php echo htmlspecialchars($_POST['check_out'] ?? ''); ?> (12.00 WIB)</p>
-            </div>
-            <div class="booking-detail-item">
-                <h4>Person</h4>
-                <p><?php echo intval($_POST['persons'] ?? 1); ?> Person</p>
-            </div>
-        </div>
-
-        <!-- Card informasi kamar -->
         <div class="room-card">
             <div class="flex flex-col md:flex-row gap-4 p-4">
                 <div class="w-full md:w-1/3">
-                    <img src="<?php echo htmlspecialchars($room['image'] ?? 'default-room.jpg'); ?>" alt="<?php echo htmlspecialchars($room['name'] ?? 'Room'); ?>" class="w-full rounded-lg">
+                    <?php
+                    $base_url = "http://" . $_SERVER['HTTP_HOST'] . '/Code/'; ?>
+                    <img src="<?php echo htmlspecialchars($room['image_booking']); ?>" 
+                         alt="<?php echo htmlspecialchars($room['name'] ?? 'Room'); ?>" class="w-full rounded-lg">
                 </div>
                 <div class="w-full md:w-2/3">
                     <h1 class="text-xl font-bold"><?php echo htmlspecialchars($room['name'] ?? 'Room Name'); ?></h1>
-                    <p class="text-gray-700 mt-2">⭐ <?php echo htmlspecialchars($room['rating'] ?? '0'); ?> </p>
+                    <p class="text-gray-700 mt-2">⭐ <?php echo htmlspecialchars($room['rating'] ?? '0'); ?></p>
                     <p class="text-gray-700">👥 <?php echo htmlspecialchars($room['capacity'] ?? '0'); ?> peoples</p>
                     <?php if ($room['breakfast_included'] ?? false): ?>
                         <p class="text-gray-700">🍳 Breakfast included</p>
                     <?php endif; ?>
-                    <p class="text-2xl font-bold text-teal-900 mt-2">Rp. <?php echo number_format($room['price'] ?? 0, 0, ',', '.'); ?></p>
+                    <p class="text-2xl font-bold text-teal-900 mt-2"><?php echo formatRupiah($room['price'] ?? 0); ?></p>
                 </div>
             </div>
         </div>
 
-        <!-- Form personal information -->
+        <!-- Form container - single white card -->
         <div class="bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-xl font-bold mb-4">Personal Information</h2>
             <form method="POST" class="space-y-4">
+                <!-- First Name -->
                 <div>
-                    <input type="text" name="first_name" class="input-field" placeholder="First Name*" required>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        First Name<span class="text-red-500 ml-0.5">*</span>
+                    </label>
+                    <input type="text" name="first_name" class="input-field" required>
                 </div>
+                
+                <!-- Last Name -->
                 <div>
-                    <input type="text" name="last_name" class="input-field" placeholder="Last Name">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                    <input type="text" name="last_name" class="input-field">
                 </div>
+                        
+                <!-- Date of Birth -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth*</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Date of Birth<span class="text-red-500 ml-0.5">*</span>
+                    </label>
                     <div class="date-input">
-                        <input type="text" name="day" class="input-field" placeholder="dd" maxlength="2" required>
-                        <input type="text" name="month" class="input-field" placeholder="mm" maxlength="2" required>
-                        <input type="text" name="year" class="input-field" placeholder="yyyy" maxlength="4" required>
+                        <input type="text" name="day" class="input-field" placeholder="dd" maxlength="2" 
+                            pattern="\d{2}" title="Please enter 2 digits (01-31)" required
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                        <input type="text" name="month" class="input-field" placeholder="mm" maxlength="2"
+                            pattern="\d{2}" title="Please enter 2 digits (01-12)" required
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                        <input type="text" name="year" class="input-field" placeholder="yyyy" maxlength="4"
+                            pattern="\d{4}" title="Please enter 4 digits" required
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                     </div>
+                    <p class="text-xs text-gray-500 mt-1">Format: DD MM YYYY (numbers only)</p>
                 </div>
+                
+                <!-- Email -->
                 <div>
-                    <input type="email" name="email" class="input-field" placeholder="Email*" required>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Email<span class="text-red-500 ml-0.5">*</span>
+                    </label>
+                    <input type="email" name="email" class="input-field" required>
                 </div>
+                
+                <!-- Phone Number -->
                 <div>
-                    <div class="flex">
-                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500">+62</span>
-                        <input type="tel" name="phone" class="input-field rounded-l-none" placeholder="Phone Number*" required>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Phone Number<span class="text-red-500 ml-0.5">*</span>
+                </label>
+                
+                <input type="tel" name="phone" class="input-field w-full" 
+                    pattern="[0-9]{8,15}" title="Please enter 8-15 digits"
+                    oninput="this.value=this.value.replace(/[^0-9+]/g,'');" required
+                    placeholder="Enter phone number (e.g. +628123456789 or 08123456789)">
+                
+                <p class="text-xs text-gray-500 mt-1">Enter phone number (8-15 digits, may include country code)</p>
+            </div>
+
+               <!-- Add On Request -->
+            <h2 class="text-xl font-bold mt-6 pt-4 border-t border-gray-200">Add On Request</h2>
+            <div class="space-y-2">
+                <label class="flex items-center justify-between py-1">
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" name="early_checkin" id="early_checkin" class="h-5 w-5 text-teal-600 rounded addon-checkbox" 
+                            data-price="350000" <?php echo isset($_POST['early_checkin']) ? 'checked' : ''; ?>>
+                        <span>Early Check In (11:00 WIB)</span>
                     </div>
-                </div>
+                    <span class="text-gray-800 font-medium"><?php echo formatRupiah(350000); ?></span>
+                </label>
+                <label class="flex items-center justify-between py-1">
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" name="late_checkout" id="late_checkout" class="h-5 w-5 text-teal-600 rounded addon-checkbox" 
+                            data-price="350000" <?php echo isset($_POST['late_checkout']) ? 'checked' : ''; ?>>
+                        <span>Late Check Out (15:00 WIB)</span>
+                    </div>
+                    <span class="text-gray-800 font-medium"><?php echo formatRupiah(350000); ?></span>
+                </label>
+                <label class="flex items-center justify-between py-1">
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" name="extra_bed" id="extra_bed" class="h-5 w-5 text-teal-600 rounded addon-checkbox" 
+                            data-price="150000" <?php echo isset($_POST['extra_bed']) ? 'checked' : ''; ?>>
+                        <span>Extra Bed</span>
+                    </div>
+                    <span class="text-gray-800 font-medium"><?php echo formatRupiah(150000); ?></span>
+                </label>
+            </div>
 
-                <!-- Add On Request dengan jarak yang lebih rapat -->
-                <h2 class="text-xl font-bold mt-4 compact-section">Add On Request</h2>
-                <div class="space-y-2 compact-space"> <!-- Mengurangi space-y dari 3 ke 2 -->
-                    <label class="flex items-center justify-between py-1 compact-space"> <!-- Mengurangi padding-y -->
-                        <div class="flex items-center">
-                            <input type="checkbox" name="early_checkin" id="early_checkin" class="h-5 w-5 text-teal-600 rounded addon-checkbox" 
-                                   data-price="350000" <?php echo isset($_POST['early_checkin']) ? 'checked' : ''; ?>>
-                            <span class="ml-2">Early Check In (11:00 WIB)</span>
-                        </div>
-                        <span class="text-teal-900 font-medium"><?php echo formatRupiah(350000); ?></span>
-                    </label>
-                    <label class="flex items-center justify-between py-1 compact-space">
-                        <div class="flex items-center">
-                            <input type="checkbox" name="late_checkout" id="late_checkout" class="h-5 w-5 text-teal-600 rounded addon-checkbox" 
-                                   data-price="350000" <?php echo isset($_POST['late_checkout']) ? 'checked' : ''; ?>>
-                            <span class="ml-2">Late Check Out (15:00 WIB)</span>
-                        </div>
-                        <span class="text-teal-900 font-medium"><?php echo formatRupiah(350000); ?></span>
-                    </label>
-                    <label class="flex items-center justify-between py-1 compact-space">
-                        <div class="flex items-center">
-                            <input type="checkbox" name="extra_bed" id="extra_bed" class="h-5 w-5 text-teal-600 rounded addon-checkbox" 
-                                   data-price="150000" <?php echo isset($_POST['extra_bed']) ? 'checked' : ''; ?>>
-                            <span class="ml-2">Extra Bed</span>
-                        </div>
-                        <span class="text-teal-900 font-medium"><?php echo formatRupiah(150000); ?></span>
-                    </label>
-                </div>
-
-                <!-- Payment Details dengan jarak yang lebih rapat -->
-                <h2 class="text-xl font-bold mt-4 compact-section">Payment Details</h2>
-                <div class="bg-gray-50 p-3 rounded-lg compact-space"> <!-- Mengurangi padding -->
-                    <div class="flex justify-between py-1 compact-space">
+                <!-- Payment Details -->
+                <h2 class="text-xl font-bold mb-2">Payment Details</h2>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
                         <span><?php echo htmlspecialchars($room['name']); ?> (<span id="nights-count"><?php echo $nights ?? 1; ?></span> nights)</span>
                         <span id="room-price"><?php echo formatRupiah($room['price']); ?></span>
                     </div>
-                    <div class="flex justify-between py-1 compact-space">
+                    <div class="flex justify-between py-1">
                         <span>Request add-on</span>
                         <span id="addons-total"><?php echo formatRupiah($addons ?? 0); ?></span>
                     </div>
-                    <div class="flex justify-between py-1 compact-space">
+                    <div class="flex justify-between py-1">
                         <span>Tax (10%)</span>
                         <span id="tax-amount"><?php echo formatRupiah(($room['price'] + ($addons ?? 0)) * 0.1); ?></span>
                     </div>
-                    <div class="flex justify-between font-bold py-1 border-t border-gray-300 mt-1 compact-space">
+                    <div class="flex justify-between font-bold py-1 border-t border-gray-300 mt-1">
                         <span>Total</span>
                         <span id="total-price"><?php echo formatRupiah($total_price ?? ($room['price'] * 1.1)); ?></span>
                     </div>
                 </div>
-
-                <button type="submit" class="mt-4 w-full bg-teal-900 text-white py-3 rounded-lg font-bold hover:bg-teal-800 transition duration-200">Complete Booking</button>
+                <button type="submit" class="qris-button mt-6 w-full py-3">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png" alt="QR Code">
+                Payment with QRIS
+            </button>
             </form>
         </div>
-    </div>
 
     <script>
             // Fungsi untuk menghitung total harga
@@ -275,5 +227,53 @@ function formatRupiah($number) {
             // Hitung total saat halaman pertama kali dimuat
             document.addEventListener('DOMContentLoaded', calculateTotal);
         </script>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Date validation
+            const dayInput = document.querySelector('input[name="day"]');
+            const monthInput = document.querySelector('input[name="month"]');
+            const yearInput = document.querySelector('input[name="year"]');
+            
+            [dayInput, monthInput, yearInput].forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.value && !/^\d+$/.test(this.value)) {
+                        this.setCustomValidity('Numbers only please');
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+            });
+
+            // Phone number validation
+            const phoneInput = document.querySelector('input[name="phone"]');
+            phoneInput.addEventListener('blur', function() {
+                if (this.value && !/^\d{9,13}$/.test(this.value)) {
+                    this.setCustomValidity('Please enter 9-13 digits');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+        });
+    </script>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInput = document.querySelector('input[name="phone"]');
+            
+            // Allow numbers and + sign only
+            phoneInput.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9+]/g,'');
+            });
+            
+            // Basic validation
+            phoneInput.addEventListener('blur', function() {
+                const phone = this.value.replace(/[^0-9]/g,''); // Count only digits
+                if (phone.length < 8 || phone.length > 15) {
+                    this.setCustomValidity('Please enter 8-15 digits');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+        });
+    </script>
     </body>
     </html>

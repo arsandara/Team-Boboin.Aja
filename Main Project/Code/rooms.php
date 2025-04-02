@@ -228,7 +228,7 @@
         <!-- Deluxe Cabin -->
         <div class="cabin-card  bg-white rounded-lg shadow-md overflow-hidden">
           <div id="Deluxe" class="relative">
-            <img src="Deluxe Cabin.jpeg" alt="Deluxe Cabin" class="w-full h-80 object-cover">
+            <img src="deluxecabin.png" alt="Deluxe Cabin" class="w-full h-80 object-cover">
             <div class="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm">
               <span class="tag-pill tag-standard">Standard</span>
             </div>

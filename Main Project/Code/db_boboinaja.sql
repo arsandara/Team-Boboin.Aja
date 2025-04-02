@@ -257,3 +257,37 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+QUERY PERBAIKAN (RATING DAN BREAKFAST)
+
+UPDATE `rooms` 
+SET `rating` = 4.9, 
+    `breakfast_included` = `capacity`;
+
+ALTER TABLE rooms ADD COLUMN image_booking VARCHAR(255) NULL;
+
+UPDATE rooms SET image_booking = 'images-booking/room_1.jpeg' WHERE room_id = 1;
+UPDATE rooms SET image_booking = 'images-booking/room_2.jpeg' WHERE room_id = 2;
+UPDATE rooms SET image_booking = 'images-booking/room_3.jpeg' WHERE room_id = 3;
+UPDATE rooms SET image_booking = 'images-booking/room_4.jpeg' WHERE room_id = 4;
+UPDATE rooms SET image_booking = 'images-booking/room_5.jpeg' WHERE room_id = 5;
+UPDATE rooms SET image_booking = 'images-booking/room_6.jpeg' WHERE room_id = 6;
+UPDATE rooms SET image_booking = 'images-booking/room_7.jpeg' WHERE room_id = 7;
+UPDATE rooms SET image_booking = 'images-booking/room_8.jpeg' WHERE room_id = 8;
+UPDATE rooms SET image_booking = 'images-booking/room_9.jpeg' WHERE room_id = 9;
+
+ALTER TABLE rooms ALTER COLUMN image_booking SET DEFAULT 'default-booking.jpg';
+
+UPDATE rooms SET image_booking = 'images-booking/room_1.jpeg.jpeg' WHERE room_id = 1;
+UPDATE rooms SET image_booking = 'images-booking/room_2.jpeg.png' WHERE room_id = 2;
+UPDATE rooms SET image_booking = 'images-booking/room_3.jpeg.png' WHERE room_id = 3;
+UPDATE rooms SET image_booking = 'images-booking/room_4.jpeg.png' WHERE room_id = 4;
+UPDATE rooms SET image_booking = 'images-booking/room_5.jpeg.png' WHERE room_id = 5;
+UPDATE rooms SET image_booking = 'images-booking/room_6.jpeg.png' WHERE room_id = 6;
+UPDATE rooms SET image_booking = 'images-booking/room_7.jpeg.png' WHERE room_id = 7;
+UPDATE rooms SET image_booking = 'images-booking/room_8.jpeg.png' WHERE room_id = 8;
+UPDATE rooms SET image_booking = 'images-booking/room_9.jpeg.png' WHERE room_id = 9;
+
+
+
+

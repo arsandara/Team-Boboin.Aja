@@ -53,18 +53,61 @@ body {
     padding: 0.75rem;
     width: 100%;
 }
+
 .date-input {
     display: flex;
     gap: 0.5rem;
 }
+
 .date-input input {
     flex: 1;
 }
-/* Tambahan untuk memperkecil jarak */
-.compact-space {
-    margin-top: 0.5rem; /* Mengurangi jarak atas */
-    margin-bottom: 0.5rem; /* Mengurangi jarak bawah */
+.input-field:invalid {
+    border-color: #ef4444;
 }
-.compact-section {
-    margin-top: 1rem; /* Mengurangi jarak antar section */
+.input-field:invalid:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* Required field asterisk */
+.required-field::after {
+    content: "*";
+    color: #ef4444;
+    margin-left: 2px;
+}
+
+/* Tighter checkbox alignment */
+input[type="checkbox"] {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.qris-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #115e59;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb; /* Add subtle border */
+}
+
+.qris-button:hover {
+    background-color: #f3f4f6;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.qris-button:active {
+    transform: translateY(1px);
+}
+
+.qris-button img {
+    width: 20px;
+    height: 20px;
 }
