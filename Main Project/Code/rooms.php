@@ -1,3 +1,26 @@
+<?php
+require 'connection.php';
+
+// Helper function to format price
+function formatRupiah($number) {
+    return 'Rp. ' . number_format($number, 0, ',', '.');
+}
+
+$rooms = [];
+try {
+    $stmt = $conn->prepare("SELECT * FROM rooms ORDER BY room_id ASC");
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $rooms[] = $row;
+    }
+
+} catch (Exception $e) {
+    die("Database error: " . $e->getMessage());
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,16 +41,16 @@
         <img alt="Boboin.Aja logo" class="h-10 mr-3" height="50" src="Logo.png" width="100">
       </div>
       <nav class="space-x-6">
-        <a class="hover:text-gray-300" href="home.html">
+      <a class="hover:text-gray-300" href="home.php">
           Home
         </a>
-        <a class="hover:text-gray-300" href="rooms.html">
+        <a class="hover:text-gray-300" href="rooms.php">
           Rooms
         </a>
-        <a class="hover:text-gray-300" href="facilities.html">
+        <a class="hover:text-gray-300" href="facilities.php">
           Facilities
         </a>
-        <a class="hover:text-gray-300" href="contact.html">
+        <a class="hover:text-gray-300" href="contact.php">
           Contact
         </a>
       </nav>
@@ -224,351 +247,74 @@
 
     <!-- Cabin Listings -->
     <div class="space-y-6">
-      <div class="space-y-6">
-        <!-- Deluxe Cabin -->
-        <div class="cabin-card  bg-white rounded-lg shadow-md overflow-hidden">
-          <div id="Deluxe" class="relative">
-            <img src="deluxecabin.png" alt="Deluxe Cabin" class="w-full h-80 object-cover">
-            <div class="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm">
-              <span class="tag-pill tag-standard">Standard</span>
+        <?php foreach ($rooms as $room): ?>
+        <div class="cabin-card bg-white rounded-lg shadow-md overflow-hidden">
+            <div id="<?php echo htmlspecialchars(str_replace(' ', '', $room['name'])); ?>" class="relative">
+                <img src="<?php echo htmlspecialchars($room['image_booking']); ?>" 
+                    alt="<?php echo htmlspecialchars($room['name']); ?>" class="w-full h-80 object-cover">
+                
+                <!-- Tags berdasarkan tipe kamar -->
+                <div class="absolute top-4 right-4 flex space-x-2">
+                    <?php if ($room['room_type'] === 'Standard'): ?>
+                        <span class="tag-pill tag-standard bg-red-500 text-white px-3 py-1 rounded-full text-sm">Standard</span>
+                    <?php elseif ($room['room_type'] === 'Family'): ?>
+                        <span class="tag-pill tag-family bg-green-500 text-white px-3 py-1 rounded-full text-sm">Family</span>
+                    <?php elseif ($room['room_type'] === 'Pet Friendly'): ?>
+                        <span class="tag-pill tag-pet bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">Pet Friendly</span>
+                    <?php elseif ($room['room_type'] === 'Romantic'): ?>
+                        <span class="tag-pill tag-romantic bg-pink-500 text-white px-3 py-1 rounded-full text-sm">Romantic</span>
+                    <?php endif; ?>
+                </div>
             </div>
-          </div>
-          <div class="p-6">
-            <h3 class="text-2xl font-bold text-gray-900">Deluxe Cabin</h3>
-            <div class="flex items-center mt-3 flex-wrap gap-4">
-              <div class="flex items-center text-yellow-400">
-                <i class="fas fa-star"></i>
-                <span class="ml-1 text-gray-800 font-medium">4.9</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-user mr-1"></i>
-                <span>2 people</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-coffee mr-1"></i>
-                <span>Breakfast</span>
-              </div>
+            
+            <div class="p-6">
+                <h3 class="text-2xl font-bold text-gray-900"><?php echo htmlspecialchars($room['name']); ?></h3>
+                
+                <div class="flex items-center mt-3 flex-wrap gap-4">
+                    <div class="flex items-center text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <span class="ml-1 text-gray-800 font-medium"><?php echo htmlspecialchars($room['rating'] ?? '4.8'); ?></span>
+                    </div>
+                    
+                    <div class="flex items-center text-gray-700">
+                        <i class="fas fa-user mr-1"></i>
+                        <span><?php echo htmlspecialchars($room['capacity']); ?> people</span>
+                    </div>
+                    
+                    <?php if ($room['breakfast_included']): ?>
+                    <div class="flex items-center text-gray-700">
+                        <i class="fas fa-coffee mr-1"></i>
+                        <span>Breakfast</span>
+                    </div>
+                    <?php endif; ?>
+                    
+                    <?php if ($room['room_type'] === 'Pet Friendly'): ?>
+                    <div class="flex items-center text-gray-700">
+                        <i class="fas fa-paw mr-1"></i>
+                        <span><?php echo $room['capacity'] > 2 ? 'All pets' : 'Small pets'; ?></span>
+                    </div>
+                    <?php elseif ($room['room_type'] === 'Romantic'): ?>
+                    <div class="flex items-center text-gray-700">
+                        <i class="fas fa-heart mr-1"></i>
+                        <span><?php echo $room['has_jacuzzi'] ? 'Luxury Sweet' : 'Couple Special'; ?></span>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                
+                <div class="mt-6 flex justify-between items-center">
+                    <p class="text-2xl font-bold text-gray-900"><?php echo formatRupiah($room['price']); ?></p>
+                    
+                    <form action="booking.php" method="GET">
+                        <input type="hidden" name="room_id" value="<?php echo $room['room_id']; ?>">
+                        <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
+                            Book Now
+                        </button>
+                    </form>
+                </div>
             </div>
-            <div class="mt-6 flex justify-between items-center">
-              <p class="text-2xl font-bold text-gray-900">Rp. 700.000</p>
-              <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="1"> <!-- Sesuai database -->
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
-                </button>
-              </form>
-            </div>
-          </div>
         </div>
-
-        <!-- Executive Cabin -->
-        <div class="cabin-card  bg-white rounded-lg shadow-md overflow-hidden">
-          <div id="Executive" class="relative">
-            <img src="executivecabin.png" alt="Executive Cabin" class="w-full h-80 object-cover">
-            <div class="absolute top-4 right-4 flex space-x-2">
-              <span class="tag-pill tag-standard bg-red-500 text-white px-3 py-1 rounded-full text-sm">Standard</span>
-            </div>
-          </div>
-          <div class="p-6">
-            <h3 class="text-2xl font-bold text-gray-900">Executive Cabin</h3>
-            <div class="flex items-center mt-3 flex-wrap gap-4">
-              <div class="flex items-center text-yellow-400">
-                <i class="fas fa-star"></i>
-                <span class="ml-1 text-gray-800 font-medium">4.7</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-user mr-1"></i>
-                <span>2 people</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-coffee mr-1"></i>
-                <span>Breakfast</span>
-              </div>
-            </div>
-            <div class="mt-6 flex justify-between items-center">
-              <p class="text-2xl font-bold text-gray-900">Rp. 900.000</p>
-              <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="2"> <!-- Sesuai database -->
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- Executive Cabin with Jacuzzi -->
-        <div class="cabin-card jacuzzi bg-white rounded-lg shadow-md overflow-hidden">
-          <div id="ExecutiveJacuzzi" class="relative">
-            <img src="executivejacuzzi.png" alt="Executive Cabin with Jacuzzi" class="w-full h-80 object-cover">
-            <div class="absolute top-4 right-4 flex space-x-2">
-              <span class="tag-pill tag-standard bg-red-500 text-white px-3 py-1 rounded-full text-sm">Standard</span>
-              <span class="tag-pill tag-jacuzzi bg-blue-500 text-white px-3 py-1 rounded-full text-sm">Jacuzzi</span>
-            </div>
-          </div>
-          <div class="p-6">
-            <h3 class="text-2xl font-bold text-gray-900">Executive Cabin with Jacuzzi</h3>
-            <div class="flex items-center mt-3 flex-wrap gap-4">
-              <div class="flex items-center text-yellow-400">
-                <i class="fas fa-star"></i>
-                <span class="ml-1 text-gray-800 font-medium">4.8</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-user mr-1"></i>
-                <span>2 people</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-coffee mr-1"></i>
-                <span>Breakfast</span>
-              </div>
-            </div>
-            <div class="mt-6 flex justify-between items-center">
-              <p class="text-2xl font-bold text-gray-900">Rp. 1.250.000</p>
-              <form action="booking.php" method="GET">
-                    <input type="hidden" name="room_id" value="3"> <!-- Sesuai database -->
-                    <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                      Book Now
-                    </button>
-                  </form>
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- Family Cabin -->
-        <div class="cabin-card family bg-white rounded-lg shadow-md overflow-hidden">
-          <div id="Family" class="relative">
-            <img src="familycabin.png" alt="Family Cabin" class="w-full h-80 object-cover">
-            <div class="absolute top-4 right-4 bg-green-500 text-white px-2 py-1 rounded-full text-sm">
-              <span class="tag-pill tag-family">Family</span>
-            </div>
-          </div>
-          <div class="p-6">
-            <h3 class="text-2xl font-bold text-gray-900">Family Cabin</h3>
-            <div class="flex items-center mt-3 flex-wrap gap-4">
-              <div class="flex items-center text-yellow-400">
-                <i class="fas fa-star"></i>
-                <span class="ml-1 text-gray-800 font-medium">4.8</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-user mr-1"></i>
-                <span>4 peoples</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-coffee mr-1"></i>
-                <span>Breakfast</span>
-              </div>
-            </div>
-            <div class="mt-6 flex justify-between items-center">
-              <p class="text-2xl font-bold text-gray-900">Rp. 1.100.000</p>
-              <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="4"> <!-- Sesuai database -->
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- Family Cabin with Jacuzzi -->
-        <div class="cabin-card family jacuzzi bg-white rounded-lg shadow-md overflow-hidden">
-          <div id="familyJacuzzi" class="relative">
-            <img src="familyjacuzzi.png" alt="Family Cabin with Jacuzzi" class="w-full h-80 object-cover">
-            <div class="absolute top-4 right-4 flex space-x-2">
-              <span class="tag-pill tag-family bg-green-500 text-white px-3 py-1 rounded-full text-sm">Family</span>
-              <span class="tag-pill tag-jacuzzi bg-blue-500 text-white px-3 py-1 rounded-full text-sm">Jacuzzi</span>
-            </div>
-          </div>
-          <div class="p-6">
-            <h3 class="text-2xl font-bold text-gray-900">Family Cabin with Jacuzzi</h3>
-            <div class="flex items-center mt-3 flex-wrap gap-4">
-              <div class="flex items-center text-yellow-400">
-                <i class="fas fa-star"></i>
-                <span class="ml-1 text-gray-800 font-medium">4.9</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-user mr-1"></i>
-                <span>4 peoples</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-coffee mr-1"></i>
-                <span>Breakfast</span>
-              </div>
-            </div>
-            <div class="mt-6 flex justify-between items-center">
-              <p class="text-2xl font-bold text-gray-900">Rp. 1.500.000</p>
-              <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="5"> <!-- Sesuai database -->
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2 Paws Cabin -->
-        <div class="cabin-card pet bg-white rounded-lg shadow-md overflow-hidden">
-          <div id="2Paws" class="relative">
-            <img src="2paws.png" alt="2 Paws Cabin" class="w-full h-80 object-cover">
-            <div class="absolute top-4 right-4 bg-yellow-500 text-white px-2 py-1 rounded-full text-sm">
-              <span class="tag-pill tag-pet">Pet Friendly</span>
-            </div>
-          </div>
-          <div class="p-6">
-            <h3 class="text-2xl font-bold text-gray-900">2 Paws Cabin</h3>
-            <div class="flex items-center mt-3 flex-wrap gap-4">
-              <div class="flex items-center text-yellow-400">
-                <i class="fas fa-star"></i>
-                <span class="ml-1 text-gray-800 font-medium">4.7</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-user mr-1"></i>
-                <span>2 peoples</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-coffee mr-1"></i>
-                <span>Breakfast</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-paw mr-1"></i>
-                <span>Small pets</span>
-              </div>
-            </div>
-            <div class="mt-6 flex justify-between items-center">
-              <p class="text-2xl font-bold text-gray-900">Rp. 750.000</p>
-              <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="6"> <!-- Sesuai database -->
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4 Paws Cabin -->
-        <div class="cabin-card pet bg-white rounded-lg shadow-md overflow-hidden">
-          <div id="4Paws" class="relative">
-            <img src="4paws.png" alt="4 Paws Cabin" class="w-full h-80 object-cover">
-            <div class="absolute top-4 right-4  bg-yellow-500 text-white px-2 py-1 rounded-full text-sm">
-              <span class="tag-pill tag-pet">Pet Friendly</span>
-            </div>
-          </div>
-          <div class="p-6">
-            <h3 class="text-2xl font-bold text-gray-900">4 Paws Cabin</h3>
-            <div class="flex items-center mt-3 flex-wrap gap-4">
-              <div class="flex items-center text-yellow-400">
-                <i class="fas fa-star"></i>
-                <span class="ml-1 text-gray-800 font-medium">4.8</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-user mr-1"></i>
-                <span>4 peoples</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-coffee mr-1"></i>
-                <span>Breakfast</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-paw mr-1"></i>
-                <span>All pets</span>
-              </div>
-            </div>
-            <div class="mt-6 flex justify-between items-center">
-              <p class="text-2xl font-bold text-gray-900">Rp. 1.000.000</p>
-              <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="7"> <!-- Sesuai database -->
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- Romantic Cabin -->
-        <div class="cabin-card romantic bg-white rounded-lg shadow-md overflow-hidden">
-          <div id="Romantic" class="relative">
-            <img src="romantic.png" alt="4 Paws Cabin" class="w-full h-80 object-cover">
-            <div class="absolute top-4 right-4 flex space-x-2">
-              <span class="tag-pill tag-romantic bg-pink-500 text-white px-3 py-1 rounded-full text-sm">Romantic</span>
-            </div>
-          </div>
-          <div class="p-6">
-            <h3 class="text-2xl font-bold text-gray-900">Romantic Cabin</h3>
-            <div class="flex items-center mt-3 flex-wrap gap-4">
-              <div class="flex items-center text-yellow-400">
-                <i class="fas fa-star"></i>
-                <span class="ml-1 text-gray-800 font-medium">4.8</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-user mr-1"></i>
-                <span>2 peoples</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-coffee mr-1"></i>
-                <span>Breakfast</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-heart"></i>
-                <span>Couple Special</span>
-              </div>
-            </div>
-            <div class="mt-6 flex justify-between items-center">
-              <p class="text-2xl font-bold text-gray-900">Rp. 1.150.000</p>
-              <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="8"> <!-- Sesuai database -->
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                  Book Now
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- Romantic Cabin With Jacuzzi -->
-        <div class="cabin-card romantic jacuzzi bg-white rounded-lg shadow-md overflow-hidden">
-          <div id="RomanticJacuzzi" class="relative">
-            <img src="romanticjacuzzi.png" alt="4 Paws Cabin" class="w-full h-80 object-cover">
-            <div class="absolute top-4 right-4 flex space-x-2">
-              <span class="tag-pill tag-romantic bg-pink-500 text-white px-3 py-1 rounded-full text-sm">Romantic</span>
-              <span class="tag-pill tag-romantic bg-blue-500 text-white px-3 py-1 rounded-full text-sm">Jacuzzi</span>
-            </div>
-          </div>
-          <div class="p-6">
-            <h3 class="text-2xl font-bold text-gray-900">Romantic Cabin With Jacuzzi</h3>
-            <div class="flex items-center mt-3 flex-wrap gap-4">
-              <div class="flex items-center text-yellow-400">
-                <i class="fas fa-star"></i>
-                <span class="ml-1 text-gray-800 font-medium">4.8</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-user mr-1"></i>
-                <span>2 peoples</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-coffee mr-1"></i>
-                <span>Breakfast</span>
-              </div>
-              <div class="flex items-center text-gray-700">
-                <i class="fas fa-heart"></i>
-                <span>Luxury Sweet</span>
-              </div>
-            </div>
-            <div class="mt-6 flex justify-between items-center">
-              <p class="text-2xl font-bold text-gray-900">Rp. 1.650.000</p>
-              <form action="booking.php" method="GET">
-                <input type="hidden" name="room_id" value="9"> <!-- Sesuai database -->
-                <button type="submit" class="book-now-btn text-sm bg-teal-900 text-white px-3 py-1 rounded">
-                    Book Now
-                </button>
-                </form>
-            </div>
-          </div>
-        </div>
+        <?php endforeach; ?>
+    </div>
 
         <script>
           document.addEventListener("DOMContentLoaded", function () {
@@ -583,6 +329,7 @@
         </script>
 
         <!-- WhatsApp, Social Media, and Map (Two Columns) -->
+        <div class="mt-12">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div class="flex flex-col space-y-6">
             <!-- WhatsApp -->
@@ -625,8 +372,10 @@
             Regency, Central Java, Baturaden, Purwokerto, Indonesia, 53151</p>
         </div>
         </section>
+        </div>
 
         <!-- Footer  -->
+        </div>
         <footer class="bg-teal-900 text-white py-12">
           <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-7xl mx-auto">

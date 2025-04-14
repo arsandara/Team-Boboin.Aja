@@ -18,16 +18,16 @@
         </span>
       </div>
       <nav class="space-x-6">
-        <a class="hover:text-gray-300" href="home.html">
+        <a class="hover:text-gray-300" href="home.php">
           Home
         </a>
-        <a class="hover:text-gray-300" href="rooms.html">
+        <a class="hover:text-gray-300" href="rooms.php">
           Rooms
         </a>
-        <a class="hover:text-gray-300" href="facilities.html">
+        <a class="hover:text-gray-300" href="facilities.php">
           Facilities
         </a>
-        <a class="hover:text-gray-300" href="contact.html">
+        <a class="hover:text-gray-300" href="contact.php">
           Contact
         </a>
       </nav>

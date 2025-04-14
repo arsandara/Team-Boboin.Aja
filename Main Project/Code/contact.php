@@ -19,16 +19,16 @@
         </span>
       </div>
       <nav class="space-x-6">
-        <a class="hover:text-gray-300" href="home.html">
+        <a class="hover:text-gray-300" href="home.php">
           Home
         </a>
-        <a class="hover:text-gray-300" href="rooms.html">
+        <a class="hover:text-gray-300" href="rooms.php">
           Rooms
         </a>
-        <a class="hover:text-gray-300" href="facilities.html">
+        <a class="hover:text-gray-300" href="facilities.php">
           Facilities
         </a>
-        <a class="hover:text-gray-300" href="contact.html">
+        <a class="hover:text-gray-300" href="contact.php">
           Contact
         </a>
       </nav>
@@ -168,62 +168,6 @@
       </div>
     </div>
   </section>
-
-  <!-- Cabin Filters -->
-  <div class="container mx-auto my-8 px-6">
-    <div class="flex space-x-2 mb-6 overflow-x-auto">
-      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('all')">All</button>
-      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('family')">Family Cabin</button>
-      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('jacuzzi')">Jacuzzi Cabin</button>
-      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('pet')">Pet Friendly Cabin</button>
-      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('romantic')">Romantic Cabin</button>
-    </div>
-    <script>
-      function filterCabins(type) {
-        // Ambil semua elemen cabin-card
-        const cabins = document.querySelectorAll('.cabin-card');
-    
-        // Iterasi setiap cabin-card
-        cabins.forEach(cabin => {
-          if (type === 'all') {
-            // Tampilkan semua kamar
-            cabin.style.display = 'block';
-          } else {
-            // Hanya tampilkan kamar yang memiliki kelas kategori yang sesuai
-            if (cabin.classList.contains(type)) {
-              cabin.style.display = 'block';
-            } else {
-              cabin.style.display = 'none';
-            }
-          }
-        });
-    
-        // Hanya pilih tombol filter (bukan tombol Book Now)
-        const filterButtons = document.querySelectorAll('.container > .flex > button');
-        
-        // Reset semua tombol filter ke state default
-        filterButtons.forEach(button => {
-          button.classList.remove('bg-teal-900', 'text-white');
-          button.classList.add('bg-white', 'border', 'border-gray-300');
-        });
-    
-        // Set tombol filter yang aktif ke state hijau
-        const activeFilterButton = document.querySelector(`.container > .flex > button[onclick="filterCabins('${type}')"]`);
-        if (activeFilterButton) {
-          activeFilterButton.classList.remove('bg-white', 'border-gray-300');
-          activeFilterButton.classList.add('bg-teal-900', 'text-white');
-        }
-      }
-    
-      // Set tombol "All" sebagai aktif secara default saat halaman dimuat
-      document.addEventListener('DOMContentLoaded', function() {
-        const allButton = document.querySelector(`.container > .flex > button[onclick="filterCabins('all')"]`);
-        if (allButton) {
-          allButton.classList.remove('bg-white', 'border-gray-300');
-          allButton.classList.add('bg-teal-900', 'text-white');
-        }
-      });
-    </script>
 
   <!-- Contact  -->
   <section class="container mx-auto py-12 px-6">

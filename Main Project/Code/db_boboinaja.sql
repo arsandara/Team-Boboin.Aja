@@ -288,6 +288,16 @@ UPDATE rooms SET image_booking = 'images-booking/room_7.jpeg.png' WHERE room_id 
 UPDATE rooms SET image_booking = 'images-booking/room_8.jpeg.png' WHERE room_id = 8;
 UPDATE rooms SET image_booking = 'images-booking/room_9.jpeg.png' WHERE room_id = 9;
 
+ALTER TABLE rooms ADD COLUMN image_room VARCHAR(255);
 
+UPDATE rooms SET image_room = 'images-booking/room-1.png' WHERE room_id = 1;
+UPDATE rooms SET image_room = 'images-booking/room-2.png' WHERE room_id = 2;
+UPDATE rooms SET image_room = 'images-booking/room-3.png' WHERE room_id = 3;
+UPDATE rooms SET image_room = 'images-booking/room-4.png' WHERE room_id = 4;
+UPDATE rooms SET image_room = 'images-booking/room-5.png' WHERE room_id = 5;
+UPDATE rooms SET image_room = 'images-booking/room-6.png' WHERE room_id = 6;
+UPDATE rooms SET image_room = 'images-booking/room-7.png' WHERE room_id = 7;
+UPDATE rooms SET image_room = 'images-booking/room-8.png' WHERE room_id = 8;
+UPDATE rooms SET image_room = 'images-booking/room-9.png' WHERE room_id = 9;
 
 

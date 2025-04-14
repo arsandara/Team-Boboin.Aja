@@ -80,13 +80,14 @@ if (file_exists($image_path)) {
         <!-- Form container - single white card -->
         <div class="bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-xl font-bold mb-4">Personal Information</h2>
-            <form method="POST" class="space-y-4">
+            <form method="POST" class="space-y-4" id="bookingForm" novalidate>
                 <!-- First Name -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         First Name<span class="text-red-500 ml-0.5">*</span>
                     </label>
-                    <input type="text" name="first_name" class="input-field" required>
+                    <input type="text" name="first_name" class="input-field" id="first_name">
+                    <p class="text-red-500 text-sm hidden" id="first_name_error">Please fill in your first name</p>
                 </div>
                 
                 <!-- Last Name -->
@@ -102,16 +103,14 @@ if (file_exists($image_path)) {
                     </label>
                     <div class="date-input">
                         <input type="text" name="day" class="input-field" placeholder="dd" maxlength="2" 
-                            pattern="\d{2}" title="Please enter 2 digits (01-31)" required
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                            id="day" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         <input type="text" name="month" class="input-field" placeholder="mm" maxlength="2"
-                            pattern="\d{2}" title="Please enter 2 digits (01-12)" required
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                            id="month" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                         <input type="text" name="year" class="input-field" placeholder="yyyy" maxlength="4"
-                            pattern="\d{4}" title="Please enter 4 digits" required
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                            id="year" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                     </div>
                     <p class="text-xs text-gray-500 mt-1">Format: DD MM YYYY (numbers only)</p>
+                    <p class="text-red-500 text-sm hidden" id="dob_error">Please enter a valid date of birth</p>
                 </div>
                 
                 <!-- Email -->
@@ -119,22 +118,21 @@ if (file_exists($image_path)) {
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Email<span class="text-red-500 ml-0.5">*</span>
                     </label>
-                    <input type="email" name="email" class="input-field" required>
+                    <input type="email" name="email" class="input-field" id="email">
+                    <p class="text-red-500 text-sm hidden" id="email_error">Please enter a valid email address</p>
                 </div>
                 
                 <!-- Phone Number -->
                 <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Phone Number<span class="text-red-500 ml-0.5">*</span>
-                </label>
-                
-                <input type="tel" name="phone" class="input-field w-full" 
-                    pattern="[0-9]{8,15}" title="Please enter 8-15 digits"
-                    oninput="this.value=this.value.replace(/[^0-9+]/g,'');" required
-                    placeholder="Enter phone number (e.g. +628123456789 or 08123456789)">
-                
-                <p class="text-xs text-gray-500 mt-1">Enter phone number (8-15 digits, may include country code)</p>
-            </div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Phone Number<span class="text-red-500 ml-0.5">*</span>
+                    </label>
+                    <input type="tel" name="phone" class="input-field w-full" id="phone"
+                        oninput="this.value=this.value.replace(/[^0-9+]/g,'');"
+                        placeholder="Enter phone number (e.g. +628123456789 or 08123456789)">
+                    <p class="text-xs text-gray-500 mt-1">Enter phone number (8-15 digits, may include country code)</p>
+                    <p class="text-red-500 text-sm hidden" id="phone_error">Please enter a valid phone number (8-15 digits)</p>
+                </div>
 
                <!-- Add On Request -->
             <h2 class="text-xl font-bold mt-6 pt-4 border-t border-gray-200">Add On Request</h2>
@@ -186,94 +184,136 @@ if (file_exists($image_path)) {
                     </div>
                 </div>
                 <button type="submit" class="qris-button mt-6 w-full py-3">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png" alt="QR Code">
-                Payment with QRIS
-            </button>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png" alt="QR Code">
+                    Payment with QRIS
+                </button>
             </form>
         </div>
 
-    <script>
-            // Fungsi untuk menghitung total harga
-            function calculateTotal() {
-                const roomPrice = <?php echo $room['price']; ?>;
-                const nights = parseInt(document.getElementById('nights-count').textContent) || 1;
-                const basePrice = roomPrice * nights;
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('bookingForm');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                let isValid = true;
                 
-                let addonsTotal = 0;
-                document.querySelectorAll('.addon-checkbox:checked').forEach(checkbox => {
-                    addonsTotal += parseInt(checkbox.dataset.price);
-                });
+                // Validate First Name
+                const firstName = document.getElementById('first_name');
+                const firstNameError = document.getElementById('first_name_error');
+                if (!firstName.value.trim()) {
+                    firstName.classList.add('border-red-500');
+                    firstNameError.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    firstName.classList.remove('border-red-500');
+                    firstNameError.classList.add('hidden');
+                }
                 
-                const subtotal = basePrice + addonsTotal;
-                const tax = subtotal * 0.1;
-                const total = subtotal + tax;
+                // Validate Date of Birth
+                const day = document.getElementById('day');
+                const month = document.getElementById('month');
+                const year = document.getElementById('year');
+                const dobError = document.getElementById('dob_error');
                 
-                // Update tampilan
-                document.getElementById('addons-total').textContent = 'Rp ' + addonsTotal.toLocaleString('id-ID');
-                document.getElementById('tax-amount').textContent = 'Rp ' + Math.round(tax).toLocaleString('id-ID');
-                document.getElementById('total-price').textContent = 'Rp ' + Math.round(total).toLocaleString('id-ID');
+                if (!day.value || !month.value || !year.value || 
+                    day.value.length !== 2 || month.value.length !== 2 || year.value.length !== 4) {
+                    day.classList.add('border-red-500');
+                    month.classList.add('border-red-500');
+                    year.classList.add('border-red-500');
+                    dobError.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    day.classList.remove('border-red-500');
+                    month.classList.remove('border-red-500');
+                    year.classList.remove('border-red-500');
+                    dobError.classList.add('hidden');
+                }
                 
-                // Update nilai untuk form submission
-                document.getElementById('room-price-value').value = basePrice;
-                document.getElementById('addons-total-value').value = addonsTotal;
-                document.getElementById('total-price-value').value = total;
+                // Validate Email
+                const email = document.getElementById('email');
+                const emailError = document.getElementById('email_error');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                
+                if (!email.value.trim() || !emailRegex.test(email.value)) {
+                    email.classList.add('border-red-500');
+                    emailError.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    email.classList.remove('border-red-500');
+                    emailError.classList.add('hidden');
+                }
+                
+                // Validate Phone Number
+                const phone = document.getElementById('phone');
+                const phoneError = document.getElementById('phone_error');
+                const phoneRegex = /^[\+]?[0-9]{8,15}$/;
+                
+                if (!phone.value.trim() || !phoneRegex.test(phone.value)) {
+                    phone.classList.add('border-red-500');
+                    phoneError.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    phone.classList.remove('border-red-500');
+                    phoneError.classList.add('hidden');
+                }
+                
+                // If all valid, submit the form
+                if (isValid) {
+                    form.submit();
+                }
+            });
+            
+            // Add real-time validation on blur
+            document.getElementById('first_name').addEventListener('blur', validateFirstName);
+            document.getElementById('email').addEventListener('blur', validateEmail);
+            document.getElementById('phone').addEventListener('blur', validatePhone);
+            
+            function validateFirstName() {
+                const firstName = document.getElementById('first_name');
+                const firstNameError = document.getElementById('first_name_error');
+                if (!firstName.value.trim()) {
+                    firstName.classList.add('border-red-500');
+                    firstNameError.classList.remove('hidden');
+                    return false;
+                } else {
+                    firstName.classList.remove('border-red-500');
+                    firstNameError.classList.add('hidden');
+                    return true;
+                }
             }
             
-            // Event listener untuk checkbox add-on
-            document.querySelectorAll('.addon-checkbox').forEach(checkbox => {
-                checkbox.addEventListener('change', calculateTotal);
-            });
+            function validateEmail() {
+                const email = document.getElementById('email');
+                const emailError = document.getElementById('email_error');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                
+                if (!email.value.trim() || !emailRegex.test(email.value)) {
+                    email.classList.add('border-red-500');
+                    emailError.classList.remove('hidden');
+                    return false;
+                } else {
+                    email.classList.remove('border-red-500');
+                    emailError.classList.add('hidden');
+                    return true;
+                }
+            }
             
-            // Hitung total saat halaman pertama kali dimuat
-            document.addEventListener('DOMContentLoaded', calculateTotal);
+            function validatePhone() {
+                const phone = document.getElementById('phone');
+                const phoneError = document.getElementById('phone_error');
+                const phoneRegex = /^[\+]?[0-9]{8,15}$/;
+                
+                if (!phone.value.trim() || !phoneRegex.test(phone.value)) {
+                    phone.classList.add('border-red-500');
+                    phoneError.classList.remove('hidden');
+                    return false;
+                } else {
+                    phone.classList.remove('border-red-500');
+                    phoneError.classList.add('hidden');
+                    return true;
+                }
+            }
+        });
         </script>
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Date validation
-            const dayInput = document.querySelector('input[name="day"]');
-            const monthInput = document.querySelector('input[name="month"]');
-            const yearInput = document.querySelector('input[name="year"]');
-            
-            [dayInput, monthInput, yearInput].forEach(input => {
-                input.addEventListener('blur', function() {
-                    if (this.value && !/^\d+$/.test(this.value)) {
-                        this.setCustomValidity('Numbers only please');
-                    } else {
-                        this.setCustomValidity('');
-                    }
-                });
-            });
-
-            // Phone number validation
-            const phoneInput = document.querySelector('input[name="phone"]');
-            phoneInput.addEventListener('blur', function() {
-                if (this.value && !/^\d{9,13}$/.test(this.value)) {
-                    this.setCustomValidity('Please enter 9-13 digits');
-                } else {
-                    this.setCustomValidity('');
-                }
-            });
-        });
-    </script>
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const phoneInput = document.querySelector('input[name="phone"]');
-            
-            // Allow numbers and + sign only
-            phoneInput.addEventListener('input', function() {
-                this.value = this.value.replace(/[^0-9+]/g,'');
-            });
-            
-            // Basic validation
-            phoneInput.addEventListener('blur', function() {
-                const phone = this.value.replace(/[^0-9]/g,''); // Count only digits
-                if (phone.length < 8 || phone.length > 15) {
-                    this.setCustomValidity('Please enter 8-15 digits');
-                } else {
-                    this.setCustomValidity('');
-                }
-            });
-        });
-    </script>
-    </body>
-    </html>
