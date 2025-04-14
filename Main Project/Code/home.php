@@ -162,43 +162,47 @@ try {
         <br>
         Recharge, unwind, and experience peace like never before.
       </p>
-      <div class="mt-6 bg-white text-black rounded-lg shadow-lg p-4 flex space-x-4">
-        <div>
-          <label class="block text-sm font-medium" for="checkin">
-            Check In
-          </label>
-          <input class="mt-1 block w-full border-gray-300 rounded-md" id="checkin" type="date">
-        </div>
-        <div>
-          <label class="block text-sm font-medium" for="checkout">
-            Check Out
-          </label>
-          <input class="mt-1 block w-full border-gray-300 rounded-md" id="checkout" type="date">
-        </div>
-        <div>
-          <label class="block text-sm font-medium" for="person">
-            Person
-          </label>
-          <select class="mt-1 block w-full border-gray-300 rounded-md" id="person">
-            <option>
-              01 Person
-            </option>
-            <option>
-              02 Person
-            </option>
-            <option>
-              03 Person
-            </option>
-            <option>
-              04 Person
-            </option>
-          </select>
-        </div>
-        <button class="bg-teal-900 text-white px-4 py-2 rounded-md">Available Room</button>
-        </script>
-      </div>
-    </div>
-  </section>
+      <!-- Booking Form - Sama di semua halaman -->
+      <div class="mt-6 bg-white text-black rounded-lg shadow-lg p-4">
+          <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
+              <!-- Check In -->
+              <div class="w-full md:w-auto">
+                  <label class="block text-sm font-medium text-right md:text-left" for="checkin">
+                      Check In
+                  </label>
+                  <input class="mt-1 block w-full border-gray-300 rounded-md" id="checkin" type="date" required>
+              </div>
+
+              <!-- Check Out -->
+              <div class="w-full md:w-auto">
+                  <label class="block text-sm font-medium text-right md:text-left" for="checkout">
+                      Check Out
+                  </label>
+                  <input class="mt-1 block w-full border-gray-300 rounded-md" id="checkout" type="date" required>
+              </div>
+              
+              <!-- Person -->
+              <div class="w-full md:w-auto">
+                  <label class="block text-sm font-medium text-right md:text-left" for="person">
+                      Person
+                  </label>
+                  <select class="mt-1 block w-full border-gray-300 rounded-md" id="person" required>
+                      <option value="01 Person">01 Person</option>
+                      <option value="02 Person" selected>02 Person</option>
+                      <option value="03 Person">03 Person</option>
+                      <option value="04 Person">04 Person</option>
+                  </select>
+              </div>
+              
+              <!-- Available Room Button -->
+              <div class="w-full md:w-auto text-center md:text-right mt-4 md:mt-0">
+                  <a href="rooms.php" class="inline-block bg-teal-900 text-white px-6 py-2 rounded-md">
+                      Available Room
+                    </a>
+                  </script>
+                </div>
+              </div>
+            </section>
 
   <!-- Explore Amazing Rooms -->
   <section class="container mx-auto py-12 px-6">
@@ -319,3 +323,27 @@ try {
       </div>
     </div>
   </footer>
+
+  <script>
+    // Set tanggal hari ini dan besok
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+
+    // Format ke yyyy-mm-dd
+    const formatDate = (date) => {
+      return date.toISOString().split('T')[0];
+    };
+
+    document.getElementById('checkin').value = formatDate(today);
+    document.getElementById('checkout').value = formatDate(tomorrow);
+    document.getElementById('persons').value = 2;
+
+    // Arahkan tombol ke halaman room.html
+    document.getElementById('availableBtn').addEventListener('click', () => {
+      window.location.href = "rooms.php";
+    });
+  </script>
+<script src="dateSync.js"></script>
+</body>
+</html>
