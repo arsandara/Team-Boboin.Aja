@@ -11,6 +11,16 @@ function formatRupiah($number) {
     return 'Rp. ' . number_format($number, 0, ',', '.');
 }
 
+// Helper function to format date
+function formatDate($dateString) {
+    return date('F d, Y', strtotime($dateString));
+}
+
+// Get booking details from localStorage (will be used by JavaScript)
+$defaultCheckin = date('Y-m-d');
+$defaultCheckout = date('Y-m-d', strtotime('+1 day'));
+$defaultPerson = '02 Person';
+
 // Get room details from database
 if ($room_id > 0) {
     try {
@@ -39,6 +49,15 @@ if (file_exists($image_path)) {
 }
 ?>
 
+<script>
+// Get booking details from localStorage
+const bookingDetails = {
+    checkin: localStorage.getItem('checkinDate') || '<?php echo $defaultCheckin; ?>',
+    checkout: localStorage.getItem('checkoutDate') || '<?php echo $defaultCheckout; ?>',
+    person: localStorage.getItem('personCount') || '<?php echo $defaultPerson; ?>'
+};
+</script>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -55,30 +74,46 @@ if (file_exists($image_path)) {
         <img src="LOGO.png" alt="boboin.aja" class="logo">
         <div class="page-title">Review Booking</div>
     </div>
-
-    <div class="container mx-auto p-4 max-w-4xl">
-        <div class="room-card">
-            <div class="flex flex-col md:flex-row gap-4 p-4">
-                <div class="w-full md:w-1/3">
-                    <?php
-                    $base_url = "http://" . $_SERVER['HTTP_HOST'] . '/Code/'; ?>
-                    <img src="<?php echo htmlspecialchars($room['image_booking']); ?>" 
-                         alt="<?php echo htmlspecialchars($room['name'] ?? 'Room'); ?>" class="w-full rounded-lg">
-                </div>
-                <div class="w-full md:w-2/3">
-                    <h1 class="text-xl font-bold"><?php echo htmlspecialchars($room['name'] ?? 'Room Name'); ?></h1>
-                    <p class="text-gray-700 mt-2">⭐ <?php echo htmlspecialchars($room['rating'] ?? '0'); ?></p>
-                    <p class="text-gray-700">👥 <?php echo htmlspecialchars($room['capacity'] ?? '0'); ?> peoples</p>
-                    <?php if ($room['breakfast_included'] ?? false): ?>
-                        <p class="text-gray-700">🍳 Breakfast included</p>
-                    <?php endif; ?>
-                    <p class="text-2xl font-bold text-teal-900 mt-2"><?php echo formatRupiah($room['price'] ?? 0); ?></p>
-                </div>
+    <div class="container mx-auto p-4 max-w-4xl space-y-6">
+    <!-- Booking Details -->
+    <div class="bg-white p-4 rounded-lg shadow-md">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <p class="text-sm text-green-800 font-semibold">Check In</p>
+                <p id="display-checkin" class="font-medium">October 10, 2025 (14.00 WIB)</p>
+            </div>
+            <div>
+                <p class="text-sm text-green-800 font-semibold">Check Out</p>
+                <p id="display-checkout" class="font-medium">October 15, 2025 (12.00 WIB)</p>
+            </div>
+            <div>
+                <p class="text-sm text-green-800 font-semibold">Person</p>
+                <p id="display-person" class="font-medium">02 Person</p>
             </div>
         </div>
+    </div>
+    
+    <!-- Room -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="flex flex-col md:flex-row gap-4 p-4">
+            <div class="w-full md:w-1/3">
+                <img src="<?php echo htmlspecialchars($room['image_booking']); ?>" 
+                     alt="<?php echo htmlspecialchars($room['name'] ?? 'Room'); ?>" class="w-full rounded-lg">
+            </div>
+            <div class="w-full md:w-2/3">
+                <h1 class="text-xl font-bold"><?php echo htmlspecialchars($room['name'] ?? 'Room Name'); ?></h1>
+                <p class="text-gray-700 mt-2">⭐ <?php echo htmlspecialchars($room['rating'] ?? '0'); ?></p>
+                <p class="text-gray-700">👥 <?php echo htmlspecialchars($room['capacity'] ?? '0'); ?> peoples</p>
+                <?php if ($room['breakfast_included'] ?? false): ?>
+                    <p class="text-gray-700">🍳 Breakfast included</p>
+                <?php endif; ?>
+                <p class="text-2xl font-bold text-teal-900 mt-2"><?php echo formatRupiah($room['price'] ?? 0); ?></p>
+            </div>
+        </div>
+    </div>
 
         <!-- Form container - single white card -->
-        <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="bg-white p-6 rounded-lg shadow-md space-y-4">
             <h2 class="text-xl font-bold mb-4">Personal Information</h2>
             <form method="POST" class="space-y-4" id="bookingForm" novalidate>
                 <!-- First Name -->
@@ -193,6 +228,58 @@ if (file_exists($image_path)) {
 
         <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Display booking details
+    const displayCheckin = document.getElementById('display-checkin');
+    const displayCheckout = document.getElementById('display-checkout');
+    const displayPerson = document.getElementById('display-person');
+    
+    if (displayCheckin && displayCheckout && displayPerson) {
+        const checkinDate = new Date(bookingDetails.checkin);
+        const checkoutDate = new Date(bookingDetails.checkout);
+        
+        // Format dates
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        displayCheckin.textContent = checkinDate.toLocaleDateString('en-US', options) + ' (14.00 WIB)';
+        displayCheckout.textContent = checkoutDate.toLocaleDateString('en-US', options) + ' (12.00 WIB)';
+        displayPerson.textContent = bookingDetails.person;
+        
+        // Calculate number of nights
+        const timeDiff = checkoutDate - checkinDate;
+        const nights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+        document.getElementById('nights-count').textContent = nights;
+        
+        // Update price calculation
+        calculateTotal(nights);
+    }
+
+    // Fungsi untuk menghitung total harga
+    function calculateTotal(nights = 1) {
+        const roomPrice = <?php echo $room['price']; ?>;
+        const basePrice = roomPrice * nights;
+        
+        let addonsTotal = 0;
+        document.querySelectorAll('.addon-checkbox:checked').forEach(checkbox => {
+            addonsTotal += parseInt(checkbox.dataset.price);
+        });
+        
+        const subtotal = basePrice + addonsTotal;
+        const tax = subtotal * 0.1;
+        const total = subtotal + tax;
+        
+        // Update tampilan
+        document.getElementById('room-price').textContent = 'Rp ' + basePrice.toLocaleString('id-ID');
+        document.getElementById('addons-total').textContent = 'Rp ' + addonsTotal.toLocaleString('id-ID');
+        document.getElementById('tax-amount').textContent = 'Rp ' + Math.round(tax).toLocaleString('id-ID');
+        document.getElementById('total-price').textContent = 'Rp ' + Math.round(total).toLocaleString('id-ID');
+    }
+    
+    // Event listener untuk checkbox add-on
+    document.querySelectorAll('.addon-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const nights = parseInt(document.getElementById('nights-count').textContent) || 1;
+            calculateTotal(nights);
+        });
+    });
             const form = document.getElementById('bookingForm');
             
             form.addEventListener('submit', function(e) {
