@@ -300,13 +300,12 @@ UPDATE rooms SET image_room = 'images-booking/room-7.png' WHERE room_id = 7;
 UPDATE rooms SET image_room = 'images-booking/room-8.png' WHERE room_id = 8;
 UPDATE rooms SET image_room = 'images-booking/room-9.png' WHERE room_id = 9;
 
-QUERY UPDATE NANAD
-
- UPDATE rooms SET capacity = 20 WHERE room_id = 2;  -- Executive Cabin (20 kamar total)
- UPDATE rooms SET capacity = 8 WHERE room_id = 3;   -- Executive Cabin with Jacuzzi (8 kamar total)
- UPDATE rooms SET capacity = 5 WHERE room_id = 4;   -- Family Cabin (5 kamar total)
- UPDATE rooms SET capacity = 7 WHERE room_id = 5;   -- Family Cabin with Jacuzzi (7 kamar total)
- UPDATE rooms SET capacity = 7 WHERE room_id = 6;   -- 2 Paws Cabin (7 kamar total)
- UPDATE rooms SET capacity = 7 WHERE room_id = 7;   -- 4 Paws Cabin (7 kamar total) - SOLD OUT
- UPDATE rooms SET capacity = 10 WHERE room_id = 8;  -- Romantic Cabin (10 kamar total)
- UPDATE rooms SET capacity = 7 WHERE room_id = 9;   -- Romantic Cabin with Jacuzzi (7 kamar total)
+UPDATE rooms SET capacity = 20 WHERE room_id = 1;
+UPDATE rooms SET capacity = 20 WHERE room_id = 2; 
+UPDATE rooms SET capacity = 8 WHERE room_id = 3;
+UPDATE rooms SET capacity = 5 WHERE room_id = 4;
+UPDATE rooms SET capacity = 7 WHERE room_id = 5;
+UPDATE rooms SET capacity = 7 WHERE room_id = 6; 
+UPDATE rooms SET capacity = 7 WHERE room_id = 7; 
+UPDATE rooms SET capacity = 10 WHERE room_id = 8; 
+UPDATE rooms SET capacity = 7 WHERE room_id = 9;
