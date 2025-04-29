@@ -300,12 +300,27 @@ UPDATE rooms SET image_room = 'images-booking/room-7.png' WHERE room_id = 7;
 UPDATE rooms SET image_room = 'images-booking/room-8.png' WHERE room_id = 8;
 UPDATE rooms SET image_room = 'images-booking/room-9.png' WHERE room_id = 9;
 
-UPDATE rooms SET capacity = 20 WHERE room_id = 1;
-UPDATE rooms SET capacity = 20 WHERE room_id = 2; 
-UPDATE rooms SET capacity = 8 WHERE room_id = 3;
-UPDATE rooms SET capacity = 5 WHERE room_id = 4;
-UPDATE rooms SET capacity = 7 WHERE room_id = 5;
-UPDATE rooms SET capacity = 7 WHERE room_id = 6; 
-UPDATE rooms SET capacity = 7 WHERE room_id = 7; 
-UPDATE rooms SET capacity = 10 WHERE room_id = 8; 
-UPDATE rooms SET capacity = 7 WHERE room_id = 9;
+
+-- Update untuk Standard (Deluxe dan Executive tanpa jacuzzi)
+UPDATE rooms 
+SET room_type = 'standard' 
+WHERE name IN ('Deluxe Cabin', 'Executive Cabin');
+
+-- Update untuk Family Cabin (termasuk yang ada jacuzzi)
+UPDATE rooms 
+SET room_type = 'family' 
+WHERE name LIKE '%Family Cabin%';
+
+-- Update untuk Jacuzzi (semua yang ada kata jacuzzi)
+UPDATE rooms 
+SET room_type = 'jacuzzi' 
+WHERE name LIKE '%Jacuzzi%';
+
+-- Pet Friendly dan Romantic tetap sama
+UPDATE rooms 
+SET room_type = 'pet_friendly' 
+WHERE name LIKE '%Paws%';
+
+UPDATE rooms 
+SET room_type = 'romantic' 
+WHERE name LIKE '%Romantic%';

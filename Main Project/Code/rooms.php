@@ -198,63 +198,51 @@ try {
   <!-- Cabin Filters -->
   <div class="container mx-auto my-8 px-6">
     <div class="flex space-x-2 mb-6 overflow-x-auto">
-      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('all')">All</button>
-      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('family')">Family Cabin</button>
-      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('jacuzzi')">Jacuzzi Cabin</button>
-      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('pet')">Pet Friendly Cabin</button>
-      <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('romantic')">Romantic Cabin</button>
+        <button class="bg-teal-900 text-white px-4 py-2 rounded" onclick="filterCabins('all')">All</button>
+        <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('family')">Family</button>
+        <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('jacuzzi')">Jacuzzi</button>
+        <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('pet_friendly')">Pet Friendly</button>
+        <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('romantic')">Romantic</button>
     </div>
     <script>
-      function filterCabins(type) {
-        // Ambil semua elemen cabin-card
+    function filterCabins(type) {
         const cabins = document.querySelectorAll('.cabin-card');
-    
-        // Iterasi setiap cabin-card
-        cabins.forEach(cabin => {
-          if (type === 'all') {
-            // Tampilkan semua kamar
-            cabin.style.display = 'block';
-          } else {
-            // Hanya tampilkan kamar yang memiliki kelas kategori yang sesuai
-            if (cabin.classList.contains(type)) {
-              cabin.style.display = 'block';
-            } else {
-              cabin.style.display = 'none';
-            }
-          }
-        });
-    
-        // Hanya pilih tombol filter (bukan tombol Book Now)
-        const filterButtons = document.querySelectorAll('.container > .flex > button');
         
-        // Reset semua tombol filter ke state default
-        filterButtons.forEach(button => {
-          button.classList.remove('bg-teal-900', 'text-white');
-          button.classList.add('bg-white', 'border', 'border-gray-300');
+        cabins.forEach(cabin => {
+            const roomType = cabin.getAttribute('data-room-type');
+            
+            if (type === 'all') {
+                cabin.style.display = 'block';
+            } else {
+                cabin.style.display = roomType === type ? 'block' : 'none';
+            }
         });
-    
-        // Set tombol filter yang aktif ke state hijau
-        const activeFilterButton = document.querySelector(`.container > .flex > button[onclick="filterCabins('${type}')"]`);
-        if (activeFilterButton) {
-          activeFilterButton.classList.remove('bg-white', 'border-gray-300');
-          activeFilterButton.classList.add('bg-teal-900', 'text-white');
-        }
-      }
-    
-      // Set tombol "All" sebagai aktif secara default saat halaman dimuat
-      document.addEventListener('DOMContentLoaded', function() {
-        const allButton = document.querySelector(`.container > .flex > button[onclick="filterCabins('all')"]`);
-        if (allButton) {
-          allButton.classList.remove('bg-white', 'border-gray-300');
-          allButton.classList.add('bg-teal-900', 'text-white');
-        }
-      });
+
+        // Update tombol aktif
+        const filterButtons = document.querySelectorAll('.container > .flex > button');
+        filterButtons.forEach(button => {
+            const filterType = button.getAttribute('onclick').replace("filterCabins('", "").replace("')", "");
+            if (filterType === type) {
+                button.classList.remove('bg-white', 'border-gray-300');
+                button.classList.add('bg-teal-900', 'text-white');
+            } else {
+                button.classList.remove('bg-teal-900', 'text-white');
+                button.classList.add('bg-white', 'border', 'border-gray-300');
+            }
+        });
+    }
+
+    // Set default filter 'All' saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+        filterCabins('all');
+    });
     </script>
 
     <!-- Cabin Listings -->
     <div class="space-y-6">
         <?php foreach ($rooms as $room): ?>
-        <div class="cabin-card bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="cabin-card bg-white rounded-lg shadow-md overflow-hidden" 
+          data-room-type="<?php echo htmlspecialchars($room['room_type']); ?>">
             <div id="<?php echo htmlspecialchars(str_replace(' ', '', $room['name'])); ?>" class="relative">
                 <img src="<?php echo htmlspecialchars($room['image_booking']); ?>" 
                     alt="<?php echo htmlspecialchars($room['name']); ?>" class="w-full h-80 object-cover">
