@@ -210,12 +210,12 @@ try {
   <div class="flex space-x-6 overflow-x-auto scrollbar-hide whitespace-nowrap">
     <?php foreach ($rooms as $room): ?>
       <div class="bg-white rounded-lg shadow-lg overflow-hidden w-80 flex-shrink-0 inline-block">
-        <a href="rooms.php#<?php echo urlencode($room['slug'] ?? strtolower(str_replace(' ', '', $room['name']))); ?>">
-          <img alt="<?php echo htmlspecialchars($room['name']); ?>" class="w-full h-48 object-cover"
+        <a href="rooms.php#<?php echo urlencode($room['slug'] ?? strtolower(str_replace(' ', '', $room['room_name']))); ?>">
+          <img alt="<?php echo htmlspecialchars($room['room_name']); ?>" class="w-full h-48 object-cover"
                src="<?php echo htmlspecialchars($room['image_booking']); ?>">
         </a>
         <div class="p-4">
-          <h3 class="text-lg font-semibold"><?php echo htmlspecialchars($room['name']); ?></h3>
+          <h3 class="text-lg font-semibold"><?php echo htmlspecialchars($room['room_name']); ?></h3>
           <div class="flex items-center text-sm text-gray-500 mt-2">
             <i class="fas fa-star text-yellow-500 mr-1"></i>
             <?php echo htmlspecialchars($room['rating'] ?? '4.9'); ?>
@@ -227,6 +227,35 @@ try {
       </div>
     <?php endforeach; ?>
   </div>
+</section>
+  
+  <!-- Services & Facilities -->
+  <section class="container mx-auto py-1 px-6">
+    <h2 class="text-2xl font-bold mb-6">
+      Services & Facilities
+    </h2>
+    <div class="grid grid-cols-3 gap-4">
+      <div class="relative-container row-span-2">
+        <img alt="Cozy Rooms" class="w-full h-full object-cover" src="Cozy Rooms.png">
+        <div class="overlay">Cozy Rooms</div>
+      </div>
+      <div class="relative-container">
+        <img alt="Private Jacuzzi" class="w-full h-full object-cover" src="Private Jacuzzi.png">
+        <div class="overlay">Private Jacuzzi</div>
+      </div>
+      <div class="relative-container">
+        <img alt="Dog Park" class="w-full h-full object-cover" src="Dog Park.png">
+        <div class="overlay">Dog Park</div>
+      </div>
+      <div class="relative-container">
+        <img alt="Outdoor Lounge" class="w-full h-full object-cover" src="Outdoor Louge.png">
+        <div class="overlay">Outdoor Lounge</div>
+      </div>
+      <div class="relative-container">
+        <img alt="Dining & Bar" class="w-full h-full object-cover" src="Dining and Bar.png">
+        <div class="overlay">Dining & Bar</div>
+      </div>
+    </div>
 </section>
 
   <!-- WhatsApp, Social Media, and Map (Two Columns) -->
@@ -325,25 +354,36 @@ try {
   </footer>
 
   <script>
-    // Set tanggal hari ini dan besok
-    const today = new Date();
-    const tomorrow = new Date();
-    tomorrow.setDate(today.getDate() + 1);
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
 
-    // Format ke yyyy-mm-dd
-    const formatDate = (date) => {
-      return date.toISOString().split('T')[0];
-    };
+  const formatDate = (date) => {
+    return date.toISOString().split('T')[0];
+  };
 
-    document.getElementById('checkin').value = formatDate(today);
-    document.getElementById('checkout').value = formatDate(tomorrow);
-    document.getElementById('persons').value = 2;
+  const checkinInput = document.getElementById('checkin');
+  const checkoutInput = document.getElementById('checkout');
 
-    // Arahkan tombol ke halaman room.html
-    document.getElementById('availableBtn').addEventListener('click', () => {
-      window.location.href = "rooms.php";
-    });
-  </script>
+  // Set nilai dan batas minimum
+  checkinInput.value = formatDate(today);
+  checkinInput.min = formatDate(today);
+
+  checkoutInput.value = formatDate(tomorrow);
+  checkoutInput.min = formatDate(tomorrow);
+
+  // Update checkout minimum saat checkin diubah
+  checkinInput.addEventListener('change', function () {
+    const selectedCheckin = new Date(this.value);
+    const newMinCheckout = new Date(selectedCheckin);
+    newMinCheckout.setDate(selectedCheckin.getDate() + 1);
+
+    checkoutInput.min = formatDate(newMinCheckout);
+    if (new Date(checkoutInput.value) <= selectedCheckin) {
+      checkoutInput.value = formatDate(newMinCheckout);
+    }
+  });
+</script>
 <script src="dateSync.js"></script>
 </body>
 </html>

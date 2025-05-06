@@ -47,6 +47,81 @@ if (file_exists($image_path)) {
 } else {
     echo "<!-- File NOT found at: " . $image_path . " -->";
 }
+
+// Handle POST submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $firstName = $_POST['first_name'] ?? '';
+    $lastName = $_POST['last_name'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $phone = $_POST['phone'] ?? '';
+    $roomId = $_GET['room_id'] ?? 0;
+    
+    $earlyCheckin = isset($_POST['early_checkin']) ? 1 : 0;
+    $lateCheckout = isset($_POST['late_checkout']) ? 1 : 0;
+    $extraBed = isset($_POST['extra_bed']) ? 1 : 0;
+
+    $checkIn = $_POST['checkin'] ?? date('Y-m-d');
+    $checkOut = $_POST['checkout'] ?? date('Y-m-d', strtotime('+1 day'));
+    $person = $_POST['person'] ?? 2;
+
+    $day = $_POST['day'] ?? '';
+    $month = $_POST['month'] ?? '';
+    $year = $_POST['year'] ?? '';
+    $dob = "$year-$month-$day";
+
+    // Fetch room info
+    $stmt = $conn->prepare("SELECT * FROM rooms WHERE room_id = ?");
+    $stmt->bind_param("i", $roomId);
+    $stmt->execute();
+    $room = $stmt->get_result()->fetch_assoc();
+
+    $duration = (strtotime($checkOut) - strtotime($checkIn)) / (60 * 60 * 24);
+    $basePrice = $room['price'] * $duration;
+
+    $addonPrice = 0;
+    if ($earlyCheckin) $addonPrice += 350000;
+    if ($lateCheckout) $addonPrice += 350000;
+    if ($extraBed) $addonPrice += 150000;
+
+    $subtotal = $basePrice + $addonPrice;
+    $tax = $subtotal * 0.1;
+    $total = $subtotal + $tax;
+
+    // Insert to reservations
+    $stmt = $conn->prepare("INSERT INTO reservations (guest_name, guest_email, guest_phone, room_id, room_name, room_number, person, check_in, check_out, duration, early_checkin, late_checkout, extra_bed, base_price, request_price, subtotal, tax, total_price, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Confirmed', NOW(), NOW())");
+
+    $guestName = $firstName . ' ' . $lastName;
+    $roomName = $room['room_name'];
+    $roomNumber = $room['room_number'];
+
+    $stmt->bind_param("sssississiiiiddddd",
+        $guestName,
+        $email,
+        $phone,
+        $roomId,
+        $roomName,
+        $roomNumber,
+        $person,
+        $checkIn,
+        $checkOut,
+        $duration,
+        $earlyCheckin,
+        $lateCheckout,
+        $extraBed,
+        $basePrice,
+        $addonPrice,
+        $subtotal,
+        $tax,
+        $total
+    );
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Booking room was successful. Thank you for booking at Boboin.Aja!'); window.location.href='home.php';</script>";
+        exit;
+    } else {
+        echo "<script>alert('Failed to save booking. Please try again.');</script>";
+    }
+}
 ?>
 
 <script>
@@ -101,7 +176,7 @@ const bookingDetails = {
                      alt="<?php echo htmlspecialchars($room['name'] ?? 'Room'); ?>" class="w-full rounded-lg">
             </div>
             <div class="w-full md:w-2/3">
-                <h1 class="text-xl font-bold"><?php echo htmlspecialchars($room['name'] ?? 'Room Name'); ?></h1>
+                <h1 class="text-xl font-bold"><span><?php echo htmlspecialchars($room['room_name']); ?></h1>
                 <p class="text-gray-700 mt-2">⭐ <?php echo htmlspecialchars($room['rating'] ?? '0'); ?></p>
                 <p class="text-gray-700">👥 <?php echo htmlspecialchars($room['capacity'] ?? '0'); ?> peoples</p>
                 <?php if ($room['breakfast_included'] ?? false): ?>
@@ -116,6 +191,9 @@ const bookingDetails = {
         <div class="bg-white p-6 rounded-lg shadow-md space-y-4">
             <h2 class="text-xl font-bold mb-4">Personal Information</h2>
             <form method="POST" class="space-y-4" id="bookingForm" novalidate>
+                <input type="hidden" name="checkin" id="form-checkin">
+                <input type="hidden" name="checkout" id="form-checkout">
+                <input type="hidden" name="person" id="form-person">
                 <!-- First Name -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -202,7 +280,7 @@ const bookingDetails = {
                 <h2 class="text-xl font-bold mb-2">Payment Details</h2>
                 <div class="space-y-2">
                     <div class="flex justify-between">
-                        <span><?php echo htmlspecialchars($room['name']); ?> (<span id="nights-count"><?php echo $nights ?? 1; ?></span> nights)</span>
+                        <span><?php echo htmlspecialchars($room['room_name']); ?> (<span id="nights-count"><?php echo $nights ?? 1; ?></span> nights)</span>
                         <span id="room-price"><?php echo formatRupiah($room['price']); ?></span>
                     </div>
                     <div class="flex justify-between py-1">
@@ -219,8 +297,7 @@ const bookingDetails = {
                     </div>
                 </div>
                 <button type="submit" class="qris-button mt-6 w-full py-3">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png" alt="QR Code">
-                    Payment with QRIS
+                    Booking Room
                 </button>
             </form>
         </div>
@@ -232,6 +309,10 @@ const bookingDetails = {
     const displayCheckin = document.getElementById('display-checkin');
     const displayCheckout = document.getElementById('display-checkout');
     const displayPerson = document.getElementById('display-person');
+
+    document.getElementById('form-checkin').value = bookingDetails.checkin;
+    document.getElementById('form-checkout').value = bookingDetails.checkout;
+    document.getElementById('form-person').value = bookingDetails.person;
     
     if (displayCheckin && displayCheckout && displayPerson) {
         const checkinDate = new Date(bookingDetails.checkin);

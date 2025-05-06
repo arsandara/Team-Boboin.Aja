@@ -1,21 +1,39 @@
 <?php
 require 'connection.php';
 
-// Helper function to format price
 function formatRupiah($number) {
     return 'Rp. ' . number_format($number, 0, ',', '.');
 }
 
+$filter = $_GET['filter'] ?? 'all';
 $rooms = [];
+
 try {
-    $stmt = $conn->prepare("SELECT * FROM rooms ORDER BY room_id ASC");
+    $sql = "SELECT * FROM rooms WHERE 1=1";
+    
+    if ($filter !== 'all') {
+      if ($filter === 'jacuzzi') {
+          $sql .= " AND has_jacuzzi = TRUE";
+      } else {
+          // For family/romantic, include their jacuzzi versions too
+          if ($filter === 'family' || $filter === 'romantic') {
+              $sql .= " AND (room_type = '" . $conn->real_escape_string($filter) . "'";
+              $sql .= " OR (name LIKE '%" . $conn->real_escape_string($filter) . "%' AND name LIKE '%Jacuzzi%'))";
+          } else {
+              $sql .= " AND room_type = '" . $conn->real_escape_string($filter) . "'";
+          }
+      }
+  }
+    
+    $sql .= " ORDER BY room_id ASC";
+    
+    $stmt = $conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->get_result();
 
     while ($row = $result->fetch_assoc()) {
         $rooms[] = $row;
     }
-
 } catch (Exception $e) {
     die("Database error: " . $e->getMessage());
 }
@@ -200,21 +218,19 @@ try {
     <div class="flex space-x-2 mb-6 overflow-x-auto">
         <button class="bg-teal-900 text-white px-4 py-2 rounded" onclick="filterCabins('all')">All</button>
         <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('family')">Family</button>
-        <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('jacuzzi')">Jacuzzi</button>
         <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('pet_friendly')">Pet Friendly</button>
         <button class="bg-white border border-gray-300 px-4 py-2 rounded" onclick="filterCabins('romantic')">Romantic</button>
     </div>
     <script>
     function filterCabins(type) {
-        const cabins = document.querySelectorAll('.cabin-card');
+          const cabins = document.querySelectorAll('.cabin-card');
         
         cabins.forEach(cabin => {
             const roomType = cabin.getAttribute('data-room-type');
-            
             if (type === 'all') {
                 cabin.style.display = 'block';
             } else {
-                cabin.style.display = roomType === type ? 'block' : 'none';
+                cabin.style.display = (roomType === type) ? 'block' : 'none';
             }
         });
 
@@ -243,9 +259,9 @@ try {
         <?php foreach ($rooms as $room): ?>
         <div class="cabin-card bg-white rounded-lg shadow-md overflow-hidden" 
           data-room-type="<?php echo htmlspecialchars($room['room_type']); ?>">
-            <div id="<?php echo htmlspecialchars(str_replace(' ', '', $room['name'])); ?>" class="relative">
+            <div id="<?php echo htmlspecialchars(str_replace(' ', '', $room['room_name'])); ?>" class="relative">
                 <img src="<?php echo htmlspecialchars($room['image_booking']); ?>" 
-                    alt="<?php echo htmlspecialchars($room['name']); ?>" class="w-full h-80 object-cover">
+                    alt="<?php echo htmlspecialchars($room['room_name']); ?>" class="w-full h-80 object-cover">
                 
                 <!-- Tags berdasarkan tipe kamar -->
                 <div class="absolute top-4 right-4 flex space-x-2">
@@ -262,7 +278,7 @@ try {
             </div>
             
             <div class="p-6">
-                <h3 class="text-2xl font-bold text-gray-900"><?php echo htmlspecialchars($room['name']); ?></h3>
+                <h3 class="text-2xl font-bold text-gray-900"><?php echo htmlspecialchars($room['room_name']); ?></h3>
                 
                 <div class="flex items-center mt-3 flex-wrap gap-4">
                     <div class="flex items-center text-yellow-400">
